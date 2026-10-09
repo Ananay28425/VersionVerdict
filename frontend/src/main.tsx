@@ -1,28 +1,361 @@
-import React, { useState } from 'react'
-import { createRoot } from 'react-dom/client'
-import './style.css'
+import React, { useState } from "react";
+import { createRoot } from "react-dom/client";
+import "./style.css";
 
-type Evidence = { url: string; quote: string; source_kind: string }
-type Card = { hit: {id:string;title:string;url:string;snippet:string};label:string;explanation:string;recipe:string|null;evidence:Evidence[] }
-type Group = { profile:{name:string;dependencies:{name:string;constraint:string;exact:string|null}[];warnings:string[]};cards:Card[] }
-type Result = {mode:string;candidate_count:number;queries:string[];results:Group[];warnings:string[]}
-const demos:Record<string,[string,string]> = {pydantic:['pydantic-v1-requirements.txt','pydantic-v2-requirements.txt'],sqlalchemy:['sqlalchemy-14-requirements.txt','sqlalchemy-20-requirements.txt']}
-const prompts:Record<string,string> = {pydantic:'validate a dictionary into a Pydantic model',sqlalchemy:'execute a SQL statement with SQLAlchemy'}
-function App(){
- const [library,setLibrary]=useState('pydantic'),[query,setQuery]=useState(prompts.pydantic),[mode,setMode]=useState('recorded')
- const [left,setLeft]=useState<File|null>(null),[right,setRight]=useState<File|null>(null),[leftExtra,setLeftExtra]=useState<File|null>(null),[rightExtra,setRightExtra]=useState<File|null>(null),[future,setFuture]=useState('unknown'),[apiMode,setApiMode]=useState('unknown')
- const [result,setResult]=useState<Result|null>(null),[error,setError]=useState(''),[loading,setLoading]=useState(false)
- async function demo(){try{const files=await Promise.all(demos[library].map(async n=>{const r=await fetch(`/fixtures/${n}`);if(!r.ok)throw Error('Demo files unavailable');return new File([await r.text()],'requirements.txt')}));setLeft(files[0]);setRight(files[1]);setMode('recorded');setApiMode('native');setFuture('false');setError('')}catch(e){setError(String(e))}}
- async function submit(e:React.FormEvent){e.preventDefault();if(!left){setError('Choose a dependency file or load demo profiles.');return}setLoading(true);setError('');setResult(null)
-  const form=new FormData();form.set('query',query);form.set('library',library);form.set('mode',mode);form.set('left_name','Version A');form.set('left_file',left);form.set('sqlalchemy_future',future);form.set('pydantic_api_mode',apiMode);if(leftExtra)form.set('left_extra_file',leftExtra);if(right){form.set('right_name','Version B');form.set('right_file',right)}if(rightExtra)form.set('right_extra_file',rightExtra)
-  try{const r=await fetch('/api/search',{method:'POST',body:form});const d=await r.json();if(!r.ok)throw Error(d.detail||'Search failed');setResult(d)}catch(e){setError(e instanceof Error?e.message:'Search failed')}finally{setLoading(false)}}
- return <main><header><div className="brand"><span className="logo">V✓</span><span><strong>VersionVerdict</strong><small>THE RIGHT ANSWER FOR YOUR VERSION</small></span></div><span className="topTag">Developer search · Python MVP</span></header>
- <section className="hero"><small>REPOSITORY-AWARE ANSWERS</small><h1>Answers change.<br/><em>Versions matter.</em></h1><p>Search technical solutions. See which ones fit your project’s declared dependencies. Inspect the evidence behind every verdict.</p></section>
- <section className="panel"><div className="heading"><h2><b>01</b> Set your context</h2><button className="textButton" onClick={demo}>Load comparison demo ↗</button></div><form onSubmit={submit}><div className="grid"><label>Library<select value={library} onChange={e=>{setLibrary(e.target.value);setQuery(prompts[e.target.value]);setLeft(null);setRight(null);setLeftExtra(null);setRightExtra(null);setResult(null)}}><option value="pydantic">Pydantic</option><option value="sqlalchemy">SQLAlchemy</option></select></label><label>Search mode<select value={mode} onChange={e=>setMode(e.target.value)}><option value="live">Live · SerpApi</option><option value="recorded">Illustrative fixture · offline</option></select></label><label>Version A<input type="file" accept=".txt,.toml" onChange={e=>setLeft(e.target.files?.[0]||null)}/><span className="filename">{left?.name||'Choose requirements.txt or pyproject.toml'}</span></label><label>Version B<input type="file" accept=".txt,.toml" onChange={e=>setRight(e.target.files?.[0]||null)}/><span className="filename">{right?.name||'Optional comparison file'}</span></label></div><details><summary>Add second manifest for either version</summary><div className="grid"><label>Version A extra file<input type="file" accept=".txt,.toml" onChange={e=>setLeftExtra(e.target.files?.[0]||null)}/><span className="filename">{leftExtra?.name||'Optional requirements.txt or pyproject.toml'}</span></label><label>Version B extra file<input type="file" accept=".txt,.toml" onChange={e=>setRightExtra(e.target.files?.[0]||null)}/><span className="filename">{rightExtra?.name||'Optional requirements.txt or pyproject.toml'}</span></label></div></details>
- {library==='sqlalchemy'&&<label>SQLAlchemy 1.4 future mode<select value={future} onChange={e=>setFuture(e.target.value)}><option value="unknown">Unknown</option><option value="false">Off · legacy engine</option><option value="true">On</option></select></label>}
- {library==='pydantic'&&<label>Pydantic API namespace<select value={apiMode} onChange={e=>setApiMode(e.target.value)}><option value="unknown">Unknown</option><option value="native">Native model APIs</option><option value="v1_shim">pydantic.v1 compatibility shim</option></select></label>}
- <label>Your question<input value={query} onChange={e=>setQuery(e.target.value)} minLength={3} maxLength={240}/></label><div className="actions"><button className="primary" disabled={loading}>{loading?'Checking sources…':'Search & compare →'}</button><span>Manifest ranges remain unresolved until pinned.</span></div></form></section>
- {error&&<p className="error" role="alert">{error}</p>}
- {result&&<section className="panel"><div className="heading"><h2><b>02</b> Evidence, ranked for you</h2><span className={'badge '+result.mode}>{result.mode==='live'?'LIVE SEARCH':'ILLUSTRATIVE FIXTURE'}</span></div><p className="muted">{result.candidate_count} shared candidates. Verdicts use declared versions and source evidence.</p>{result.warnings.map((w,i)=><p className="notice" key={i}>{w}</p>)}<div className="columns">{result.results.map((g,i)=><div key={i}><div className="groupHead"><div><small>PROJECT {i?'B':'A'}</small><h3>{g.profile.name}</h3></div><div>{g.profile.dependencies.map((d,j)=><div key={j}>{d.name} <strong>{d.exact||d.constraint}</strong></div>)}</div></div>{g.profile.warnings.map((w,j)=><p className="notice" key={j}>{w}</p>)}{g.cards.map((c,n)=><article key={c.hit.id}><div className="cardHead"><span>{String(n+1).padStart(2,'0')}</span><span className={'label '+c.label.toLowerCase()}>{c.label.replace('_',' ')}</span></div><h4><a href={c.hit.url} target="_blank" rel="noreferrer">{c.hit.title} ↗</a></h4><p>{c.explanation}</p>{c.recipe&&<code>{c.recipe}</code>}<details><summary>Inspect evidence · {c.evidence.length} source{c.evidence.length===1?'':'s'}</summary>{c.evidence.length?c.evidence.map((v,k)=><div className="evidence" key={k}><small>{v.source_kind}</small><blockquote>“{v.quote}”</blockquote><a href={v.url} target="_blank" rel="noreferrer">Open source ↗</a></div>):<p>Insufficient verifiable evidence.</p>}</details></article>)}</div>)}</div><details><summary>Search queries</summary><ol>{result.queries.map((q,i)=><li key={i}>{q}</li>)}</ol></details></section>}
- <footer><span>VersionVerdict</span><span>Evidence before certainty.</span></footer></main>}
-createRoot(document.getElementById('root')!).render(<App/>)
+type Evidence = { url: string; quote: string; source_kind: string };
+type Card = {
+  hit: { id: string; title: string; url: string; snippet: string };
+  label: string;
+  explanation: string;
+  recipe: string | null;
+  evidence: Evidence[];
+};
+type Group = {
+  profile: {
+    name: string;
+    dependencies: { name: string; constraint: string; exact: string | null }[];
+    warnings: string[];
+  };
+  cards: Card[];
+};
+type Result = {
+  mode: string;
+  candidate_count: number;
+  queries: string[];
+  results: Group[];
+  warnings: string[];
+};
+const demos: Record<string, [string, string]> = {
+  pydantic: ["pydantic-v1-requirements.txt", "pydantic-v2-requirements.txt"],
+  sqlalchemy: [
+    "sqlalchemy-14-requirements.txt",
+    "sqlalchemy-20-requirements.txt",
+  ],
+};
+const prompts: Record<string, string> = {
+  pydantic: "validate a dictionary into a Pydantic model",
+  sqlalchemy: "execute a SQL statement with SQLAlchemy",
+};
+function App() {
+  const [library, setLibrary] = useState("pydantic"),
+    [query, setQuery] = useState(prompts.pydantic),
+    [mode, setMode] = useState("recorded");
+  const [left, setLeft] = useState<File | null>(null),
+    [right, setRight] = useState<File | null>(null),
+    [leftExtra, setLeftExtra] = useState<File | null>(null),
+    [rightExtra, setRightExtra] = useState<File | null>(null),
+    [future, setFuture] = useState("unknown"),
+    [apiMode, setApiMode] = useState("unknown");
+  const [result, setResult] = useState<Result | null>(null),
+    [error, setError] = useState(""),
+    [loading, setLoading] = useState(false);
+  async function demo() {
+    try {
+      const files = await Promise.all(
+        demos[library].map(async (n) => {
+          const r = await fetch(`/fixtures/${n}`);
+          if (!r.ok) throw Error("Demo files unavailable");
+          return new File([await r.text()], "requirements.txt");
+        }),
+      );
+      setLeft(files[0]);
+      setRight(files[1]);
+      setMode("recorded");
+      setApiMode("native");
+      setFuture("false");
+      setError("");
+    } catch (e) {
+      setError(String(e));
+    }
+  }
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!left) {
+      setError("Choose a dependency file or load demo profiles.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setResult(null);
+    const form = new FormData();
+    form.set("query", query);
+    form.set("library", library);
+    form.set("mode", mode);
+    form.set("left_name", "Version A");
+    form.set("left_file", left);
+    form.set("sqlalchemy_future", future);
+    form.set("pydantic_api_mode", apiMode);
+    if (leftExtra) form.set("left_extra_file", leftExtra);
+    if (right) {
+      form.set("right_name", "Version B");
+      form.set("right_file", right);
+    }
+    if (rightExtra) form.set("right_extra_file", rightExtra);
+    try {
+      const r = await fetch("/api/search", { method: "POST", body: form });
+      const d = await r.json();
+      if (!r.ok) throw Error(d.detail || "Search failed");
+      setResult(d);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Search failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+  return (
+    <main>
+      <header>
+        <div className="brand">
+          <span className="logo">V✓</span>
+          <span>
+            <strong>VersionVerdict</strong>
+            <small>THE RIGHT ANSWER FOR YOUR VERSION</small>
+          </span>
+        </div>
+        <span className="topTag">Developer search · Python MVP</span>
+      </header>
+      <section className="hero">
+        <small>REPOSITORY-AWARE ANSWERS</small>
+        <h1>
+          Answers change.
+          <br />
+          <em>Versions matter.</em>
+        </h1>
+        <p>
+          Search technical solutions. See which ones fit your project’s declared
+          dependencies. Inspect the evidence behind every verdict.
+        </p>
+      </section>
+      <section className="panel">
+        <div className="heading">
+          <h2>
+            <b>01</b> Set your context
+          </h2>
+          <button className="textButton" onClick={demo}>
+            Load comparison demo ↗
+          </button>
+        </div>
+        <form onSubmit={submit}>
+          <div className="grid">
+            <label>
+              Library
+              <select
+                value={library}
+                onChange={(e) => {
+                  setLibrary(e.target.value);
+                  setQuery(prompts[e.target.value]);
+                  setLeft(null);
+                  setRight(null);
+                  setLeftExtra(null);
+                  setRightExtra(null);
+                  setResult(null);
+                }}
+              >
+                <option value="pydantic">Pydantic</option>
+                <option value="sqlalchemy">SQLAlchemy</option>
+              </select>
+            </label>
+            <label>
+              Search mode
+              <select value={mode} onChange={(e) => setMode(e.target.value)}>
+                <option value="live">Live · SerpApi</option>
+                <option value="recorded">Illustrative fixture · offline</option>
+              </select>
+            </label>
+            <label>
+              Version A
+              <input
+                type="file"
+                accept=".txt,.toml"
+                onChange={(e) => setLeft(e.target.files?.[0] || null)}
+              />
+              <span className="filename">
+                {left?.name || "Choose requirements.txt or pyproject.toml"}
+              </span>
+            </label>
+            <label>
+              Version B
+              <input
+                type="file"
+                accept=".txt,.toml"
+                onChange={(e) => setRight(e.target.files?.[0] || null)}
+              />
+              <span className="filename">
+                {right?.name || "Optional comparison file"}
+              </span>
+            </label>
+          </div>
+          <details>
+            <summary>Add second manifest for either version</summary>
+            <div className="grid">
+              <label>
+                Version A extra file
+                <input
+                  type="file"
+                  accept=".txt,.toml"
+                  onChange={(e) => setLeftExtra(e.target.files?.[0] || null)}
+                />
+                <span className="filename">
+                  {leftExtra?.name ||
+                    "Optional requirements.txt or pyproject.toml"}
+                </span>
+              </label>
+              <label>
+                Version B extra file
+                <input
+                  type="file"
+                  accept=".txt,.toml"
+                  onChange={(e) => setRightExtra(e.target.files?.[0] || null)}
+                />
+                <span className="filename">
+                  {rightExtra?.name ||
+                    "Optional requirements.txt or pyproject.toml"}
+                </span>
+              </label>
+            </div>
+          </details>
+          {library === "sqlalchemy" && (
+            <label>
+              SQLAlchemy 1.4 future mode
+              <select
+                value={future}
+                onChange={(e) => setFuture(e.target.value)}
+              >
+                <option value="unknown">Unknown</option>
+                <option value="false">Off · legacy engine</option>
+                <option value="true">On</option>
+              </select>
+            </label>
+          )}
+          {library === "pydantic" && (
+            <label>
+              Pydantic API namespace
+              <select
+                value={apiMode}
+                onChange={(e) => setApiMode(e.target.value)}
+              >
+                <option value="unknown">Unknown</option>
+                <option value="native">Native model APIs</option>
+                <option value="v1_shim">pydantic.v1 compatibility shim</option>
+              </select>
+            </label>
+          )}
+          <label>
+            Your question
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              minLength={3}
+              maxLength={240}
+            />
+          </label>
+          <div className="actions">
+            <button className="primary" disabled={loading}>
+              {loading ? "Checking sources…" : "Search & compare →"}
+            </button>
+            <span>Manifest ranges remain unresolved until pinned.</span>
+          </div>
+        </form>
+      </section>
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+      {result && (
+        <section className="panel">
+          <div className="heading">
+            <h2>
+              <b>02</b> Evidence, ranked for you
+            </h2>
+            <span className={"badge " + result.mode}>
+              {result.mode === "live" ? "LIVE SEARCH" : "ILLUSTRATIVE FIXTURE"}
+            </span>
+          </div>
+          <p className="muted">
+            {result.candidate_count} shared candidates. Verdicts use declared
+            versions and source evidence.
+          </p>
+          {result.warnings.map((w, i) => (
+            <p className="notice" key={i}>
+              {w}
+            </p>
+          ))}
+          <div className="columns">
+            {result.results.map((g, i) => (
+              <div key={i}>
+                <div className="groupHead">
+                  <div>
+                    <small>PROJECT {i ? "B" : "A"}</small>
+                    <h3>{g.profile.name}</h3>
+                  </div>
+                  <div>
+                    {g.profile.dependencies.map((d, j) => (
+                      <div key={j}>
+                        {d.name} <strong>{d.exact || d.constraint}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {g.profile.warnings.map((w, j) => (
+                  <p className="notice" key={j}>
+                    {w}
+                  </p>
+                ))}
+                {g.cards.map((c, n) => (
+                  <article key={c.hit.id}>
+                    <div className="cardHead">
+                      <span>{String(n + 1).padStart(2, "0")}</span>
+                      <span className={"label " + c.label.toLowerCase()}>
+                        {c.label.replace("_", " ")}
+                      </span>
+                    </div>
+                    <h4>
+                      <a href={c.hit.url} target="_blank" rel="noreferrer">
+                        {c.hit.title} ↗
+                      </a>
+                    </h4>
+                    <p>{c.explanation}</p>
+                    {c.recipe && <code>{c.recipe}</code>}
+                    <details>
+                      <summary>
+                        Inspect evidence · {c.evidence.length} source
+                        {c.evidence.length === 1 ? "" : "s"}
+                      </summary>
+                      {c.evidence.length ? (
+                        c.evidence.map((v, k) => (
+                          <div className="evidence" key={k}>
+                            <small>{v.source_kind}</small>
+                            <blockquote>“{v.quote}”</blockquote>
+                            <a href={v.url} target="_blank" rel="noreferrer">
+                              Open source ↗
+                            </a>
+                          </div>
+                        ))
+                      ) : (
+                        <p>Insufficient verifiable evidence.</p>
+                      )}
+                    </details>
+                  </article>
+                ))}
+              </div>
+            ))}
+          </div>
+          <details>
+            <summary>Search queries</summary>
+            <ol>
+              {result.queries.map((q, i) => (
+                <li key={i}>{q}</li>
+              ))}
+            </ol>
+          </details>
+        </section>
+      )}
+      <footer>
+        <span>VersionVerdict</span>
+        <span>Evidence before certainty.</span>
+      </footer>
+    </main>
+  );
+}
+createRoot(document.getElementById("root")!).render(<App />);

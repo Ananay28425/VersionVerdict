@@ -2,7 +2,7 @@
 
 **The right answer for your version.**
 
-*Repository-aware developer search powered by SerpApi.*
+_Repository-aware developer search powered by SerpApi._
 
 VersionVerdict searches for technical solutions, then checks a small set of recognized recipes against dependency versions declared in a Python project manifest.
 
@@ -28,12 +28,12 @@ The relevance of advice can change across framework upgrades, deprecations, brea
 
 VersionVerdict accepts a technical question and one or two dependency manifests. It retrieves search results, checks a narrow set of recipes against declared versions, and ranks the same candidates for each environment.
 
-| Verdict | Meaning in this MVP |
-|---|---|
-| `COMPATIBLE` | Reviewed evidence supports this recognized recipe for the declared version and selected context. |
-| `WRONG_VERSION` | Reviewed evidence says the recipe is unavailable in the declared version. |
-| `STALE` | Evidence says the recipe is deprecated or superseded for the declared version. |
-| `UNCERTAIN` | Version, runtime context, source, or recipe evidence is missing, ambiguous, or outside tested rule coverage. |
+| Verdict         | Meaning in this MVP                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `COMPATIBLE`    | Reviewed evidence supports this recognized recipe for the declared version and selected context.             |
+| `WRONG_VERSION` | Reviewed evidence says the recipe is unavailable in the declared version.                                    |
+| `STALE`         | Evidence says the recipe is deprecated or superseded for the declared version.                               |
+| `UNCERTAIN`     | Version, runtime context, source, or recipe evidence is missing, ambiguous, or outside tested rule coverage. |
 
 A Google result or snippet alone cannot establish a definitive verdict. VersionVerdict does not use an LLM to decide factual compatibility.
 
@@ -45,11 +45,11 @@ A Google result or snippet alone cannot establish a definitive verdict. VersionV
 
 Ask: **“Validate a dictionary into a Pydantic model.”** Compare these manifests:
 
-| | Project A | Project B |
-|---|---|---|
-| Declared dependency | `pydantic==1.10.15` | `pydantic==2.9.2` |
-| Top recipe | `parse_obj()` — `COMPATIBLE` | `model_validate()` — `COMPATIBLE` |
-| Other recipe | `model_validate()` — `WRONG_VERSION` | `parse_obj()` — `STALE` |
+|                     | Project A                            | Project B                         |
+| ------------------- | ------------------------------------ | --------------------------------- |
+| Declared dependency | `pydantic==1.10.15`                  | `pydantic==2.9.2`                 |
+| Top recipe          | `parse_obj()` — `COMPATIBLE`         | `model_validate()` — `COMPATIBLE` |
+| Other recipe        | `model_validate()` — `WRONG_VERSION` | `parse_obj()` — `STALE`           |
 
 The result cards include the recipe quote and a separate official migration fact. Pydantic V2 retains several old method names but deprecates them, so the MVP labels `parse_obj()` **STALE**, not removed.
 
@@ -116,11 +116,11 @@ The current ranker orders categories as COMPATIBLE, UNCERTAIN, STALE, then WRONG
 
 SerpApi supplies live Google result discovery for the requested technical question and the planner's version-targeted queries. VersionVerdict uses returned titles, URLs, snippets, and positions to build a shared candidate set, then fetches permitted official documentation for evidence.
 
-| SerpApi capability | Current use |
-|---|---|
-| Google Search API | Retrieves live organic results when credentials and network access work. |
-| Query parameters | Sends the original and bounded version-targeted queries. |
-| Structured JSON | Supplies titles, links, snippets, and positions for normalization and ranking. |
+| SerpApi capability | Current use                                                                    |
+| ------------------ | ------------------------------------------------------------------------------ |
+| Google Search API  | Retrieves live organic results when credentials and network access work.       |
+| Query parameters   | Sends the original and bounded version-targeted queries.                       |
+| Structured JSON    | Supplies titles, links, snippets, and positions for normalization and ranking. |
 
 **SerpApi discovers candidate sources. VersionVerdict checks whether its supported recipes apply to a declared environment.**
 
@@ -130,15 +130,15 @@ SerpApi supplies live Google result discovery for the requested technical questi
 
 ## Technology Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React, TypeScript, Vite |
-| Backend | Python 3.12+, FastAPI, Pydantic |
-| HTTP | httpx async client |
-| Dependency parsing | `packaging`, Python `tomllib` |
-| Source extraction | Beautiful Soup |
-| Search | SerpApi Google Search API |
-| Tests | pytest, pytest-asyncio, HTTPX mocks |
+| Layer              | Technology                          |
+| ------------------ | ----------------------------------- |
+| Frontend           | React, TypeScript, Vite             |
+| Backend            | Python 3.12+, FastAPI, Pydantic     |
+| HTTP               | httpx async client                  |
+| Dependency parsing | `packaging`, Python `tomllib`       |
+| Source extraction  | Beautiful Soup                      |
+| Search             | SerpApi Google Search API           |
+| Tests              | pytest, pytest-asyncio, HTTPX mocks |
 
 One FastAPI service can serve the built React app. No database, account system, queue, or separate worker is required for this MVP.
 
@@ -275,4 +275,4 @@ Verify current registration, eligibility, submission fields, and event rules on 
 
 **VersionVerdict — The right answer for your version.**
 
-*Search relevance is not the same as software compatibility.*
+_Search relevance is not the same as software compatibility._
