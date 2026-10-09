@@ -1,0 +1,20 @@
+[
+  {
+    "file": "pydantic-migration-ca359e0.md",
+    "url": "https://raw.githubusercontent.com/pydantic/pydantic/ca359e009fcfaff2a80df33cb99ee6ab21aaf033/docs/migration.md",
+    "revision": "ca359e009fcfaff2a80df33cb99ee6ab21aaf033",
+    "sha256": "9bf17e8ea8a85b05dbbaccc710f35f30eac8c43dbdc889a3e715b65aa19599ac",
+    "provenance": "reviewed_snapshot",
+    "retrieved_on": "2026-10-09",
+    "note": "Full immutable official source downloaded for reviewed migration rules; not fetched live during a search."
+  },
+  {
+    "file": "sqlalchemy-migration-e75a465.rst",
+    "url": "https://raw.githubusercontent.com/sqlalchemy/sqlalchemy/e75a4651657f1d12dd747cc8e6f93d2815ea8936/doc/build/changelog/migration_20.rst",
+    "revision": "e75a4651657f1d12dd747cc8e6f93d2815ea8936",
+    "sha256": "1b939c47f6d6ccc6ae822e5f2658a024d0769f4759f64bceb534a45a69ee372f",
+    "provenance": "reviewed_snapshot",
+    "retrieved_on": "2026-10-09",
+    "note": "Full immutable official source downloaded for reviewed migration rules; not fetched live during a search."
+  }
+]

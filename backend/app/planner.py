@@ -1,17 +1,30 @@
+"""Small search plans shared across dependency profiles."""
+
+from dataclasses import dataclass
 import re
 
 
-def plan(query: str, library: str) -> list[str]:
+@dataclass(frozen=True)
+class QuerySpec:
+    engine: str
+    query: str
+
+
+def plan(query: str, library: str, include_secondary: bool = False) -> list[QuerySpec]:
     query = re.sub(r'\s+', ' ', query).strip()[:240]
     if library == 'pydantic':
-        return [
+        queries = [
             f'{query} pydantic',
-            f'{query} pydantic v1 site:docs.pydantic.dev',
-            f'{query} pydantic v2 site:docs.pydantic.dev',
+            f'{query} pydantic v1 v2 migration (site:docs.pydantic.dev OR site:pydantic.dev/docs/validation)',
         ]
-    if library == 'sqlalchemy':
-        return [
+    elif library == 'sqlalchemy':
+        queries = [
             f'{query} sqlalchemy',
             f'{query} sqlalchemy 1.4 2.0 site:docs.sqlalchemy.org',
         ]
-    raise ValueError('Supported libraries: pydantic, sqlalchemy')
+    else:
+        raise ValueError('Supported libraries: pydantic, sqlalchemy')
+    specs = [QuerySpec('google', value) for value in queries]
+    if include_secondary:
+        specs.append(QuerySpec('bing', f'{query} {library} migration'))
+    return specs

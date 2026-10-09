@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 import tomllib
-from packaging.requirements import Requirement
+from packaging.requirements import InvalidRequirement, Requirement
 from packaging.utils import canonicalize_name
 
 from .models import Dependency, Profile
@@ -14,17 +14,27 @@ SUPPORTED_FILES = {'requirements.txt', 'pyproject.toml'}
 def _add(text: str, source: str, profile: Profile):
     try:
         req = Requirement(text)
-    except Exception:
+    except InvalidRequirement:
         profile.warnings.append(f'{source}: unsupported declaration: {text[:100]}')
         return
     if req.url:
         profile.warnings.append(
             f'{source}: direct URL dependency {req.name} has unknown version'
         )
+        profile.dependencies.append(
+            Dependency(name=canonicalize_name(req.name), constraint='direct URL (unresolved)', source=source)
+        )
         return
     if req.marker:
         profile.warnings.append(
-            f'{source}: marker for {req.name} needs target context; skipped'
+            f'{source}: marker for {req.name} needs target context; version unresolved'
+        )
+        profile.dependencies.append(
+            Dependency(
+                name=canonicalize_name(req.name),
+                constraint=f'{req.specifier or "unknown"}; {req.marker}',
+                source=source,
+            )
         )
         return
     constraint = str(req.specifier) or 'unknown'
@@ -92,13 +102,31 @@ def parse_profile(
             except tomllib.TOMLDecodeError as exc:
                 raise ValueError('Invalid pyproject.toml') from exc
             project = data.get('project', {})
-            if project.get('dynamic') and 'dependencies' in project['dynamic']:
+            if not isinstance(project, dict):
+                raise ValueError('pyproject.toml project must be a table')
+            dynamic = project.get('dynamic', [])
+            if not isinstance(dynamic, list) or not all(isinstance(item, str) for item in dynamic):
+                raise ValueError('project.dynamic must be a list of field names')
+            if 'dependencies' in dynamic:
                 profile.warnings.append(
                     'Dynamic project dependencies cannot be resolved'
                 )
-            for item in project.get('dependencies', []):
+            dependencies = project.get('dependencies', [])
+            if not isinstance(dependencies, list) or not all(isinstance(item, str) for item in dependencies):
+                raise ValueError('project.dependencies must be a list of requirement strings')
+            if dependencies and 'dependencies' in dynamic:
+                raise ValueError('project.dependencies cannot be both dynamic and statically declared')
+            for item in dependencies:
                 _add(item, filename, profile)
-            poetry = data.get('tool', {}).get('poetry', {}).get('dependencies', {})
+            tool = data.get('tool', {})
+            if not isinstance(tool, dict):
+                raise ValueError('pyproject.toml tool must be a table')
+            poetry_table = tool.get('poetry', {})
+            if not isinstance(poetry_table, dict):
+                raise ValueError('tool.poetry must be a table')
+            poetry = poetry_table.get('dependencies', {})
+            if not isinstance(poetry, dict):
+                raise ValueError('tool.poetry.dependencies must be a table')
             for pkg, spec in poetry.items():
                 if pkg.lower() == 'python':
                     continue
@@ -106,8 +134,9 @@ def parse_profile(
                     spec.startswith(('^', '~')) or '*' in spec
                 ):
                     profile.warnings.append(
-                        f'{filename}: Poetry constraint for {pkg} needs resolution; skipped'
+                        f'{filename}: Poetry constraint for {pkg} needs resolution'
                     )
+                    _add(pkg, filename, profile)
                 elif isinstance(spec, str):
                     _add(
                         f'{pkg}{spec if spec[:1] in "<>=!" else "==" + spec}',
@@ -118,6 +147,7 @@ def parse_profile(
                     profile.warnings.append(
                         f'{filename}: unsupported Poetry declaration for {pkg}'
                     )
+                    _add(pkg, filename, profile)
     by_name: dict[str, list[Dependency]] = {}
     for dep in profile.dependencies:
         by_name.setdefault(dep.name, []).append(dep)

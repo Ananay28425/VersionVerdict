@@ -1,0 +1,487 @@
+{
+  "schema_version": 1,
+  "scope": "Independently authored labeled scenarios. HTML and snippets are synthetic unit/evaluation inputs, not captured SerpApi responses or actual fetched pages. Expected labels encode explicit reviewed semantics, not production accuracy.",
+  "cases": [
+    {
+      "id": "pydantic-native-old-v1",
+      "library": "pydantic",
+      "manifest": "pydantic==1.10.15\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.parse_obj({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "rationale": "Native V1 BaseModel exposes parse_obj."
+    },
+    {
+      "id": "pydantic-native-old-v2",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.parse_obj({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "STALE"
+      ],
+      "rationale": "V2 native BaseModel retains parse_obj with documented deprecation."
+    },
+    {
+      "id": "pydantic-native-new-v1",
+      "library": "pydantic",
+      "manifest": "pydantic==1.10.15\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "rationale": "Native V1 BaseModel has no model_validate."
+    },
+    {
+      "id": "pydantic-native-new-v2",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "rationale": "Native V2 BaseModel exposes model_validate."
+    },
+    {
+      "id": "pydantic-range",
+      "library": "pydantic",
+      "manifest": "pydantic>=1,<3\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "A range crossing the migration boundary cannot establish an exact API version."
+    },
+    {
+      "id": "pydantic-missing",
+      "library": "pydantic",
+      "manifest": "# no relevant dependency\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "No Pydantic declaration establishes a target version."
+    },
+    {
+      "id": "pydantic-source-unavailable",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "model_validate() for Pydantic 2",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": null,
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "A search snippet cannot replace unavailable fetched source."
+    },
+    {
+      "id": "pydantic-snippet-only",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "model_validate()",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "plain",
+      "source": "User.model_validate({\"id\":7})",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "Unstructured snippet text is not a verified source recipe."
+    },
+    {
+      "id": "pydantic-context-unknown",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "unknown",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "Unknown native versus V1 shim context changes API behavior."
+    },
+    {
+      "id": "pydantic-shim-old-v2",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "v1_shim",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic.v1 import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.parse_obj({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "rationale": "V2 pydantic.v1 BaseModel exposes the V1 parse_obj API."
+    },
+    {
+      "id": "pydantic-shim-new-v2",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "v1_shim",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic.v1 import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "rationale": "The V1 shim model does not expose V2 model_validate."
+    },
+    {
+      "id": "pydantic-namespace-mismatch",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "v1_shim",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "A native source recipe does not establish applicability to a V1-shim target."
+    },
+    {
+      "id": "pydantic-unbound-symbol",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>value = User.model_validate({&quot;id&quot;:7})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "An API-like token without import and BaseModel provenance is insufficient."
+    },
+    {
+      "id": "pydantic-outside-reviewed-line",
+      "library": "pydantic",
+      "manifest": "pydantic==0.32.2\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.parse_obj({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "An unreviewed release line must not inherit a rule."
+    },
+    {
+      "id": "pydantic-prerelease",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.0rc1\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "Prereleases are outside the reviewed stable release rules."
+    },
+    {
+      "id": "pydantic-mixed-independent-recipes",
+      "library": "pydantic",
+      "manifest": "pydantic==2.9.2\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.pydantic.dev/latest/concepts/models/",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.parse_obj({&quot;id&quot;: &quot;7&quot;})</code></pre><h2 id=\"recipe-2\">Example 2</h2><pre><code>from pydantic import BaseModel\nclass User(BaseModel):\n    id: int\nuser = User.model_validate({&quot;id&quot;: &quot;7&quot;})</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "STALE",
+        "COMPATIBLE"
+      ],
+      "rationale": "Separate source sections preserve separate old and new recipe verdicts."
+    },
+    {
+      "id": "sqlalchemy-engine-14-legacy",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==1.4.54\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": false,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;)\nresult = engine.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "STALE"
+      ],
+      "rationale": "Legacy 1.4 Engine.execute works with a migration deprecation."
+    },
+    {
+      "id": "sqlalchemy-engine-14-future",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==1.4.54\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": true,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;)\nresult = engine.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "rationale": "1.4 future-mode Engine.execute is disabled."
+    },
+    {
+      "id": "sqlalchemy-engine-20",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==2.0.36\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;)\nresult = engine.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "rationale": "Engine.execute was removed in SQLAlchemy 2.0."
+    },
+    {
+      "id": "sqlalchemy-engine-14-context-unknown",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==1.4.54\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;)\nresult = engine.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "Unknown 1.4 future mode changes Engine.execute behavior."
+    },
+    {
+      "id": "sqlalchemy-connection-14-legacy",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==1.4.54\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": false,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;, future=False)\nwith engine.begin() as connection:\n    result = connection.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "rationale": "An explicit legacy Engine with text and a managed transaction supports Connection.execute on SQLAlchemy1.4."
+    },
+    {
+      "id": "sqlalchemy-connection-14-future",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==1.4.54\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": true,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;, future=True)\nwith engine.begin() as connection:\n    result = connection.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "rationale": "Connection.execute(text()) in an explicit transaction works in 1.4 future mode."
+    },
+    {
+      "id": "sqlalchemy-connection-20",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==2.0.36\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;, future=True)\nwith engine.begin() as connection:\n    result = connection.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "rationale": "Connection.execute(text()) with engine.begin is the supported 2.0 recipe."
+    },
+    {
+      "id": "sqlalchemy-raw-string",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==2.0.36\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;, future=True)\nwith engine.begin() as connection:\n    result = connection.execute(&quot;SELECT 1&quot;)</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "The supported text() statement precondition is absent; the recipe cannot be marked compatible."
+    },
+    {
+      "id": "sqlalchemy-write-without-commit",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==2.0.36\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;, future=True)\nwith engine.connect() as connection:\n    connection.execute(text(&quot;INSERT INTO users (id) VALUES (7)&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "A write without begin or commit cannot claim transaction-complete applicability."
+    },
+    {
+      "id": "sqlalchemy-unbound-connection",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==2.0.36\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import text\nresult = connection.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "The connection receiver and lifecycle are not established."
+    },
+    {
+      "id": "sqlalchemy-range",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy>=1.4,<3\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;, future=True)\nwith engine.begin() as connection:\n    result = connection.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "A declared range does not establish an exact tested environment."
+    },
+    {
+      "id": "sqlalchemy-missing-migration-fact",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==2.0.36\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": null,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>API examples</h1><h2 id=\"recipe-1\">Example 1</h2><pre><code>from sqlalchemy import create_engine, text\nengine = create_engine(&quot;sqlite://&quot;, future=True)\nwith engine.begin() as connection:\n    result = connection.execute(text(&quot;SELECT 1&quot;))</code></pre></main>",
+      "facts": "missing",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "A fetched recipe without the required verified migration evidence must abstain."
+    },
+    {
+      "id": "sqlalchemy-14-source-context-conflict",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==1.4.54\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": false,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>Conflicting mode</h1><pre>from sqlalchemy import create_engine\nengine = create_engine(\"sqlite://\", future=True)\nengine.execute(\"SELECT 1\")</pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "The source future mode conflicts with the declared legacy engine context; do not silently choose one."
+    },
+    {
+      "id": "sqlalchemy-14-legacy-commit-unavailable",
+      "library": "sqlalchemy",
+      "manifest": "SQLAlchemy==1.4.54\n",
+      "pydantic_api_mode": "native",
+      "sqlalchemy_future": false,
+      "title": "Models and transactions",
+      "source_url": "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html",
+      "source_format": "html",
+      "source": "<main><h1>Commit as you go</h1><pre>from sqlalchemy import create_engine, text\nengine = create_engine(\"sqlite://\", future=False)\nwith engine.connect() as connection:\n    connection.execute(text(\"INSERT INTO example VALUES (1)\"))\n    connection.commit()</pre></main>",
+      "facts": "complete",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "rationale": "Connection.commit is not the legacy1.4 API; explicit commit placement alone cannot establish compatibility."
+    }
+  ]
+}

@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "rule_version": "2026-10-10-scoped-v2",
+  "rules_source_hash": "47ec3d67e8aa6d6c901852a7c1ec3ca7378593812ea990cefb3d662477303a9c",
+  "extractor_source_hash": "5f2c299f93a7ffe4348876602bdc741ad6ebf786e7a5ecb50c63fe4dccf6dc8d",
+  "checked_at": "2026-10-09T21:00:04.605274+00:00",
+  "scope": "Independently authored labeled scenarios. HTML and snippets are synthetic unit/evaluation inputs, not captured SerpApi responses or actual fetched pages. Expected labels encode explicit reviewed semantics, not production accuracy.",
+  "limitations": [
+    "Curated fixtures are not a random sample of real-world results.",
+    "This suite does not measure live API success, latency, general search relevance, or production accuracy.",
+    "Published source URLs identify documentation families; evaluation HTML is explicitly authored input, not a capture from those URLs."
+  ],
+  "fixture_hash": "fe33795ebb45aa00697c0d2d328df23adc966cf7092b42b19f5bfeb8cfb67d5f",
+  "case_count": 30,
+  "metrics": {
+    "exact_case_match": {
+      "numerator": 30,
+      "denominator": 30,
+      "value": 1.0
+    },
+    "label_accuracy": {
+      "numerator": 31,
+      "denominator": 31,
+      "value": 1.0
+    },
+    "definitive_label_precision": {
+      "numerator": 14,
+      "denominator": 14,
+      "value": 1.0
+    },
+    "definitive_coverage": {
+      "numerator": 14,
+      "denominator": 31,
+      "value": 0.45161290322580644
+    },
+    "uncertainty_rate": {
+      "numerator": 17,
+      "denominator": 31,
+      "value": 0.5483870967741935
+    }
+  },
+  "expected_distribution": {
+    "COMPATIBLE": 7,
+    "STALE": 3,
+    "WRONG_VERSION": 4,
+    "UNCERTAIN": 17
+  },
+  "actual_distribution": {
+    "COMPATIBLE": 7,
+    "STALE": 3,
+    "WRONG_VERSION": 4,
+    "UNCERTAIN": 17
+  },
+  "cases": [
+    {
+      "id": "pydantic-native-old-v1",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "actual_labels": [
+        "COMPATIBLE"
+      ],
+      "status": "PASS",
+      "rationale": "Native V1 BaseModel exposes parse_obj.",
+      "explanations": [
+        "Native BaseModel.parse_obj is supported in V1; V2 retains it with a deprecation warning."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-native-old-v2",
+      "expected_labels": [
+        "STALE"
+      ],
+      "actual_labels": [
+        "STALE"
+      ],
+      "status": "PASS",
+      "rationale": "V2 native BaseModel retains parse_obj with documented deprecation.",
+      "explanations": [
+        "Native BaseModel.parse_obj is supported in V1; V2 retains it with a deprecation warning."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-native-new-v1",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "actual_labels": [
+        "WRONG_VERSION"
+      ],
+      "status": "PASS",
+      "rationale": "Native V1 BaseModel has no model_validate.",
+      "explanations": [
+        "Native BaseModel.model_validate is the V2 replacement; native V1 models lack this API."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-native-new-v2",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "actual_labels": [
+        "COMPATIBLE"
+      ],
+      "status": "PASS",
+      "rationale": "Native V2 BaseModel exposes model_validate.",
+      "explanations": [
+        "Native BaseModel.model_validate is the V2 replacement; native V1 models lack this API."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-range",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "A range crossing the migration boundary cannot establish an exact API version.",
+      "explanations": [
+        "Dependency version is a range, missing, or conflicting; applicability is unresolved."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-missing",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "No Pydantic declaration establishes a target version.",
+      "explanations": [
+        "Dependency version is a range, missing, or conflicting; applicability is unresolved."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-source-unavailable",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "A search snippet cannot replace unavailable fetched source.",
+      "explanations": [
+        "Source page could not be verified; a search snippet is insufficient."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        0
+      ]
+    },
+    {
+      "id": "pydantic-snippet-only",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "Unstructured snippet text is not a verified source recipe.",
+      "explanations": [
+        "Unstructured source text cannot establish a scoped code recipe."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        0
+      ]
+    },
+    {
+      "id": "pydantic-context-unknown",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "Unknown native versus V1 shim context changes API behavior.",
+      "explanations": [
+        "Source BaseModel namespace differs from, or is not confirmed by, the project API context."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-shim-old-v2",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "actual_labels": [
+        "COMPATIBLE"
+      ],
+      "status": "PASS",
+      "rationale": "V2 pydantic.v1 BaseModel exposes the V1 parse_obj API.",
+      "explanations": [
+        "The explicitly imported pydantic.v1 BaseModel exposes parse_obj, not native V2 model_validate."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "pydantic-shim-new-v2",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "actual_labels": [
+        "WRONG_VERSION"
+      ],
+      "status": "PASS",
+      "rationale": "The V1 shim model does not expose V2 model_validate.",
+      "explanations": [
+        "The explicitly imported pydantic.v1 BaseModel exposes parse_obj, not native V2 model_validate."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "pydantic-namespace-mismatch",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "A native source recipe does not establish applicability to a V1-shim target.",
+      "explanations": [
+        "Source BaseModel namespace differs from, or is not confirmed by, the project API context."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-unbound-symbol",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "An API-like token without import and BaseModel provenance is insufficient.",
+      "explanations": [
+        "Recipe context is incomplete: Explicit pydantic BaseModel namespace and unmodified API; API availability only; input data, custom validators and complete program behavior are not verified."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-outside-reviewed-line",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "An unreviewed release line must not inherit a rule.",
+      "explanations": [
+        "This Pydantic version is outside the reviewed rule range (1.10.x or 2.0\u20132.14.x)."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-prerelease",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "Prereleases are outside the reviewed stable release rules.",
+      "explanations": [
+        "Prerelease, development, local, and postrelease versions are outside the reviewed rules."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        2
+      ]
+    },
+    {
+      "id": "pydantic-mixed-independent-recipes",
+      "expected_labels": [
+        "STALE",
+        "COMPATIBLE"
+      ],
+      "actual_labels": [
+        "STALE",
+        "COMPATIBLE"
+      ],
+      "status": "PASS",
+      "rationale": "Separate source sections preserve separate old and new recipe verdicts.",
+      "explanations": [
+        "Native BaseModel.parse_obj is supported in V1; V2 retains it with a deprecation warning.",
+        "Native BaseModel.model_validate is the V2 replacement; native V1 models lack this API."
+      ],
+      "recipe_count": 2,
+      "evidence_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "sqlalchemy-engine-14-legacy",
+      "expected_labels": [
+        "STALE"
+      ],
+      "actual_labels": [
+        "STALE"
+      ],
+      "status": "PASS",
+      "rationale": "Legacy 1.4 Engine.execute works with a migration deprecation.",
+      "explanations": [
+        "Engine.execute is legacy in SQLAlchemy 1.4; future mode disables it, and 2.0 removes it."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-engine-14-future",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "actual_labels": [
+        "WRONG_VERSION"
+      ],
+      "status": "PASS",
+      "rationale": "1.4 future-mode Engine.execute is disabled.",
+      "explanations": [
+        "Engine.execute is legacy in SQLAlchemy 1.4; future mode disables it, and 2.0 removes it."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-engine-20",
+      "expected_labels": [
+        "WRONG_VERSION"
+      ],
+      "actual_labels": [
+        "WRONG_VERSION"
+      ],
+      "status": "PASS",
+      "rationale": "Engine.execute was removed in SQLAlchemy 2.0.",
+      "explanations": [
+        "Engine.execute is legacy in SQLAlchemy 1.4; future mode disables it, and 2.0 removes it."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-engine-14-context-unknown",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "Unknown 1.4 future mode changes Engine.execute behavior.",
+      "explanations": [
+        "SQLAlchemy 1.4 engine future mode is unknown; Engine.execute depends on that setting."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-connection-14-legacy",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "actual_labels": [
+        "COMPATIBLE"
+      ],
+      "status": "PASS",
+      "rationale": "An explicit legacy Engine with text and a managed transaction supports Connection.execute on SQLAlchemy1.4.",
+      "explanations": [
+        "This scoped Connection.execute recipe explicitly uses text(...) and a supported connection/transaction context."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-connection-14-future",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "actual_labels": [
+        "COMPATIBLE"
+      ],
+      "status": "PASS",
+      "rationale": "Connection.execute(text()) in an explicit transaction works in 1.4 future mode.",
+      "explanations": [
+        "This scoped Connection.execute recipe explicitly uses text(...) and a supported connection/transaction context."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-connection-20",
+      "expected_labels": [
+        "COMPATIBLE"
+      ],
+      "actual_labels": [
+        "COMPATIBLE"
+      ],
+      "status": "PASS",
+      "rationale": "Connection.execute(text()) with engine.begin is the supported 2.0 recipe.",
+      "explanations": [
+        "This scoped Connection.execute recipe explicitly uses text(...) and a supported connection/transaction context."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-raw-string",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "The supported text() statement precondition is absent; the recipe cannot be marked compatible.",
+      "explanations": [
+        "Recipe context is incomplete: Connection created from a SQLAlchemy Engine; Statement explicitly wrapped in sqlalchemy.text(...); Explicit transaction/commit for writes; SELECT does not promise persistence; SQL syntax, schema, data and complete program behavior are not verified."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-write-without-commit",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "A write without begin or commit cannot claim transaction-complete applicability.",
+      "explanations": [
+        "Recipe context is incomplete: Connection created from a SQLAlchemy Engine; Statement explicitly wrapped in sqlalchemy.text(...); Explicit transaction/commit for writes; SELECT does not promise persistence; SQL syntax, schema, data and complete program behavior are not verified."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-unbound-connection",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "The connection receiver and lifecycle are not established.",
+      "explanations": [
+        "Recipe context is incomplete: Connection created from a SQLAlchemy Engine; Statement explicitly wrapped in sqlalchemy.text(...); Explicit transaction/commit for writes; SELECT does not promise persistence; SQL syntax, schema, data and complete program behavior are not verified."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-range",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "A declared range does not establish an exact tested environment.",
+      "explanations": [
+        "Dependency version is a range, missing, or conflicting; applicability is unresolved."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-missing-migration-fact",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "A fetched recipe without the required verified migration evidence must abstain.",
+      "explanations": [
+        "Required scoped recipe or immutable reviewed migration evidence is missing."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        1
+      ]
+    },
+    {
+      "id": "sqlalchemy-14-source-context-conflict",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "The source future mode conflicts with the declared legacy engine context; do not silently choose one.",
+      "explanations": [
+        "Recipe create_engine(future=...) conflicts with the project engine context; resolve the setting first."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    },
+    {
+      "id": "sqlalchemy-14-legacy-commit-unavailable",
+      "expected_labels": [
+        "UNCERTAIN"
+      ],
+      "actual_labels": [
+        "UNCERTAIN"
+      ],
+      "status": "PASS",
+      "rationale": "Connection.commit is not the legacy1.4 API; explicit commit placement alone cannot establish compatibility.",
+      "explanations": [
+        "Connection.commit()/rollback() require the SQLAlchemy 1.4 future API or 2.0; this project uses the 1.4 legacy connection API."
+      ],
+      "recipe_count": 1,
+      "evidence_counts": [
+        3
+      ]
+    }
+  ]
+}

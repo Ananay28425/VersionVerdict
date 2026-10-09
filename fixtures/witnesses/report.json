@@ -1,0 +1,723 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-09T20:54:10.965281+00:00",
+  "scope": "Repository-authored minimal recipes, isolated pinned packages, SQLite only. No uploaded or retrieved code was executed. Passing witnesses do not validate arbitrary web sources, production repositories, or other releases.",
+  "runner_python": "3.12.14",
+  "environments": {
+    "pydantic-1.10.15": {
+      "requirements": [
+        "pydantic==1.10.15",
+        "typing_extensions==4.15.0"
+      ],
+      "setup": [
+        {
+          "command": [
+            "/workspace/VersionVerdict/.venv/bin/python",
+            "-m",
+            "venv",
+            "/tmp/versionverdict-witness-venvs/pydantic-1.10.15"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "/tmp/versionverdict-witness-venvs/pydantic-1.10.15/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--only-binary=:all:",
+            "pydantic==1.10.15",
+            "typing_extensions==4.15.0"
+          ],
+          "returncode": 0,
+          "stdout": "Collecting pydantic==1.10.15\n  Downloading pydantic-1.10.15-py3-none-any.whl.metadata (150 kB)\nCollecting typing_extensions==4.15.0\n  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)\nDownloading pydantic-1.10.15-py3-none-any.whl (159 kB)\nDownloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)\nInstalling collected packages: typing_extensions, pydantic\nSuccessfully installed pydantic-1.10.15 typing_extensions-4.15.0\n",
+          "stderr": "WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n"
+        }
+      ],
+      "probe": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-1.10.15/bin/python",
+          "-I",
+          "-c",
+          "import json,platform,importlib.metadata as m; print(json.dumps({'python':platform.python_version(),'packages':{d.metadata['Name']:d.version for d in m.distributions()}}))"
+        ],
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.14\", \"packages\": {\"pydantic\": \"1.10.15\", \"typing_extensions\": \"4.15.0\", \"pip\": \"25.0.1\"}}\n",
+        "stderr": ""
+      },
+      "observed": {
+        "python": "3.12.14",
+        "packages": {
+          "pydantic": "1.10.15",
+          "typing_extensions": "4.15.0",
+          "pip": "25.0.1"
+        }
+      },
+      "pins_match": true
+    },
+    "pydantic-2.9.2": {
+      "requirements": [
+        "pydantic==2.9.2",
+        "pydantic_core==2.23.4",
+        "annotated-types==0.7.0",
+        "typing_extensions==4.15.0"
+      ],
+      "setup": [
+        {
+          "command": [
+            "/workspace/VersionVerdict/.venv/bin/python",
+            "-m",
+            "venv",
+            "/tmp/versionverdict-witness-venvs/pydantic-2.9.2"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "/tmp/versionverdict-witness-venvs/pydantic-2.9.2/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--only-binary=:all:",
+            "pydantic==2.9.2",
+            "pydantic_core==2.23.4",
+            "annotated-types==0.7.0",
+            "typing_extensions==4.15.0"
+          ],
+          "returncode": 0,
+          "stdout": "Collecting pydantic==2.9.2\n  Downloading pydantic-2.9.2-py3-none-any.whl.metadata (149 kB)\nCollecting pydantic_core==2.23.4\n  Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)\nCollecting annotated-types==0.7.0\n  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)\nCollecting typing_extensions==4.15.0\n  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)\nDownloading pydantic-2.9.2-py3-none-any.whl (434 kB)\nDownloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 2.1/2.1 MB 10.4 MB/s eta 0:00:00\nDownloading annotated_types-0.7.0-py3-none-any.whl (13 kB)\nDownloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)\nInstalling collected packages: typing_extensions, annotated-types, pydantic_core, pydantic\nSuccessfully installed annotated-types-0.7.0 pydantic-2.9.2 pydantic_core-2.23.4 typing_extensions-4.15.0\n",
+          "stderr": "WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n"
+        }
+      ],
+      "probe": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-2.9.2/bin/python",
+          "-I",
+          "-c",
+          "import json,platform,importlib.metadata as m; print(json.dumps({'python':platform.python_version(),'packages':{d.metadata['Name']:d.version for d in m.distributions()}}))"
+        ],
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.14\", \"packages\": {\"pydantic\": \"2.9.2\", \"pydantic_core\": \"2.23.4\", \"annotated-types\": \"0.7.0\", \"typing_extensions\": \"4.15.0\", \"pip\": \"25.0.1\"}}\n",
+        "stderr": ""
+      },
+      "observed": {
+        "python": "3.12.14",
+        "packages": {
+          "pydantic": "2.9.2",
+          "pydantic_core": "2.23.4",
+          "annotated-types": "0.7.0",
+          "typing_extensions": "4.15.0",
+          "pip": "25.0.1"
+        }
+      },
+      "pins_match": true
+    },
+    "sqlalchemy-1.4.54": {
+      "requirements": [
+        "SQLAlchemy==1.4.54",
+        "greenlet==3.2.4"
+      ],
+      "setup": [
+        {
+          "command": [
+            "/workspace/VersionVerdict/.venv/bin/python",
+            "-m",
+            "venv",
+            "/tmp/versionverdict-witness-venvs/sqlalchemy-1.4.54"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "/tmp/versionverdict-witness-venvs/sqlalchemy-1.4.54/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--only-binary=:all:",
+            "SQLAlchemy==1.4.54",
+            "greenlet==3.2.4"
+          ],
+          "returncode": 0,
+          "stdout": "Collecting SQLAlchemy==1.4.54\n  Downloading SQLAlchemy-1.4.54-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (10 kB)\nCollecting greenlet==3.2.4\n  Downloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB)\nDownloading SQLAlchemy-1.4.54-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.6 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.6/1.6 MB 8.5 MB/s eta 0:00:00\nDownloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (607 kB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 607.6/607.6 kB 58.5 MB/s eta 0:00:00\nInstalling collected packages: greenlet, SQLAlchemy\nSuccessfully installed SQLAlchemy-1.4.54 greenlet-3.2.4\n",
+          "stderr": "WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n"
+        }
+      ],
+      "probe": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-1.4.54/bin/python",
+          "-I",
+          "-c",
+          "import json,platform,importlib.metadata as m; print(json.dumps({'python':platform.python_version(),'packages':{d.metadata['Name']:d.version for d in m.distributions()}}))"
+        ],
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.14\", \"packages\": {\"SQLAlchemy\": \"1.4.54\", \"greenlet\": \"3.2.4\", \"pip\": \"25.0.1\"}}\n",
+        "stderr": ""
+      },
+      "observed": {
+        "python": "3.12.14",
+        "packages": {
+          "SQLAlchemy": "1.4.54",
+          "greenlet": "3.2.4",
+          "pip": "25.0.1"
+        }
+      },
+      "pins_match": true
+    },
+    "sqlalchemy-2.0.36": {
+      "requirements": [
+        "SQLAlchemy==2.0.36",
+        "greenlet==3.2.4",
+        "typing_extensions==4.15.0"
+      ],
+      "setup": [
+        {
+          "command": [
+            "/workspace/VersionVerdict/.venv/bin/python",
+            "-m",
+            "venv",
+            "/tmp/versionverdict-witness-venvs/sqlalchemy-2.0.36"
+          ],
+          "returncode": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "/tmp/versionverdict-witness-venvs/sqlalchemy-2.0.36/bin/python",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--only-binary=:all:",
+            "SQLAlchemy==2.0.36",
+            "greenlet==3.2.4",
+            "typing_extensions==4.15.0"
+          ],
+          "returncode": 0,
+          "stdout": "Collecting SQLAlchemy==2.0.36\n  Downloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.7 kB)\nCollecting greenlet==3.2.4\n  Downloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB)\nCollecting typing_extensions==4.15.0\n  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)\nDownloading SQLAlchemy-2.0.36-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 3.2/3.2 MB 12.0 MB/s eta 0:00:00\nDownloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (607 kB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 607.6/607.6 kB 12.9 MB/s eta 0:00:00\nDownloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)\nInstalling collected packages: typing_extensions, greenlet, SQLAlchemy\nSuccessfully installed SQLAlchemy-2.0.36 greenlet-3.2.4 typing_extensions-4.15.0\n",
+          "stderr": "WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.\n"
+        }
+      ],
+      "probe": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-2.0.36/bin/python",
+          "-I",
+          "-c",
+          "import json,platform,importlib.metadata as m; print(json.dumps({'python':platform.python_version(),'packages':{d.metadata['Name']:d.version for d in m.distributions()}}))"
+        ],
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.14\", \"packages\": {\"SQLAlchemy\": \"2.0.36\", \"greenlet\": \"3.2.4\", \"typing_extensions\": \"4.15.0\", \"pip\": \"25.0.1\"}}\n",
+        "stderr": ""
+      },
+      "observed": {
+        "python": "3.12.14",
+        "packages": {
+          "SQLAlchemy": "2.0.36",
+          "greenlet": "3.2.4",
+          "typing_extensions": "4.15.0",
+          "pip": "25.0.1"
+        }
+      },
+      "pins_match": true
+    }
+  },
+  "cases": [
+    {
+      "id": "pydantic-parse-obj-v1",
+      "environment": "pydantic-1.10.15",
+      "snippet": "pydantic_parse_obj.py",
+      "recipe": "parse_obj()",
+      "expected": {
+        "outcome": "success",
+        "result": 7,
+        "exception": null,
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from pydantic import BaseModel\n        class User(BaseModel):\n            id: int\n        result = User.parse_obj({\"id\": \"7\"}).id\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "b56e2c44eceb4ec4dbee3912949cdf7feaf9f47316375020d48796b7444ce3ad",
+      "checked_at": "2026-10-09T20:54:15.376954+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": null,
+        "outcome": "success",
+        "result": 7,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-1.10.15/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/pydantic_parse_obj.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": null, \"outcome\": \"success\", \"result\": 7, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "pydantic-model-validate-v1",
+      "environment": "pydantic-1.10.15",
+      "snippet": "pydantic_model_validate.py",
+      "recipe": "model_validate()",
+      "expected": {
+        "outcome": "exception",
+        "result": null,
+        "exception": "AttributeError",
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from pydantic import BaseModel\n        class User(BaseModel):\n            id: int\n        result = User.model_validate({\"id\": \"7\"}).id\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "19a8c2d668b712813e3c2f9327469f08bc0ee225aeef2c1c1f631edbfec4ae02",
+      "checked_at": "2026-10-09T20:54:15.441885+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": "AttributeError",
+        "message": "type object 'User' has no attribute 'model_validate'",
+        "outcome": "exception",
+        "result": null,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-1.10.15/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/pydantic_model_validate.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": \"AttributeError\", \"message\": \"type object 'User' has no attribute 'model_validate'\", \"outcome\": \"exception\", \"result\": null, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "pydantic-parse-obj-v2",
+      "environment": "pydantic-2.9.2",
+      "snippet": "pydantic_parse_obj.py",
+      "recipe": "parse_obj()",
+      "expected": {
+        "outcome": "success",
+        "result": 7,
+        "exception": null,
+        "deprecation": true
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from pydantic import BaseModel\n        class User(BaseModel):\n            id: int\n        result = User.parse_obj({\"id\": \"7\"}).id\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "b56e2c44eceb4ec4dbee3912949cdf7feaf9f47316375020d48796b7444ce3ad",
+      "checked_at": "2026-10-09T20:54:21.105578+00:00",
+      "observed": {
+        "deprecation": true,
+        "exception": null,
+        "outcome": "success",
+        "result": 7,
+        "warnings": [
+          {
+            "category": "PydanticDeprecatedSince20",
+            "message": "The `parse_obj` method is deprecated; use `model_validate` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.9/migration/"
+          }
+        ]
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-2.9.2/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/pydantic_parse_obj.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": true, \"exception\": null, \"outcome\": \"success\", \"result\": 7, \"warnings\": [{\"category\": \"PydanticDeprecatedSince20\", \"message\": \"The `parse_obj` method is deprecated; use `model_validate` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.9/migration/\"}]}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "pydantic-model-validate-v2",
+      "environment": "pydantic-2.9.2",
+      "snippet": "pydantic_model_validate.py",
+      "recipe": "model_validate()",
+      "expected": {
+        "outcome": "success",
+        "result": 7,
+        "exception": null,
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from pydantic import BaseModel\n        class User(BaseModel):\n            id: int\n        result = User.model_validate({\"id\": \"7\"}).id\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "19a8c2d668b712813e3c2f9327469f08bc0ee225aeef2c1c1f631edbfec4ae02",
+      "checked_at": "2026-10-09T20:54:21.260547+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": null,
+        "outcome": "success",
+        "result": 7,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-2.9.2/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/pydantic_model_validate.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": null, \"outcome\": \"success\", \"result\": 7, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "pydantic-v1-shim-parse-obj-v2",
+      "environment": "pydantic-2.9.2",
+      "snippet": "pydantic_v1_parse_obj.py",
+      "recipe": "pydantic.v1 parse_obj()",
+      "expected": {
+        "outcome": "success",
+        "result": 7,
+        "exception": null,
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from pydantic.v1 import BaseModel\n        class User(BaseModel):\n            id: int\n        result = User.parse_obj({\"id\": \"7\"}).id\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "b1ab3b861e8f3bd5abfdc1dfdb22930f3b490475fbd277d7bb06be5f542a6b54",
+      "checked_at": "2026-10-09T20:54:21.420311+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": null,
+        "outcome": "success",
+        "result": 7,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-2.9.2/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/pydantic_v1_parse_obj.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": null, \"outcome\": \"success\", \"result\": 7, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "pydantic-v1-shim-model-validate-v2",
+      "environment": "pydantic-2.9.2",
+      "snippet": "pydantic_v1_model_validate.py",
+      "recipe": "pydantic.v1 model_validate()",
+      "expected": {
+        "outcome": "exception",
+        "result": null,
+        "exception": "AttributeError",
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from pydantic.v1 import BaseModel\n        class User(BaseModel):\n            id: int\n        result = User.model_validate({\"id\": \"7\"}).id\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "354fc26a942665946b96fa3a25c6d8eeea3245fb42484c91ff70f44efcc891ca",
+      "checked_at": "2026-10-09T20:54:21.486404+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": "AttributeError",
+        "message": "type object 'User' has no attribute 'model_validate'",
+        "outcome": "exception",
+        "result": null,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/pydantic-2.9.2/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/pydantic_v1_model_validate.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": \"AttributeError\", \"message\": \"type object 'User' has no attribute 'model_validate'\", \"outcome\": \"exception\", \"result\": null, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "sqlalchemy-engine-execute-14-legacy",
+      "environment": "sqlalchemy-1.4.54",
+      "snippet": "sqlalchemy_engine.py",
+      "recipe": "Engine.execute()",
+      "expected": {
+        "outcome": "success",
+        "result": 1,
+        "exception": null,
+        "deprecation": true
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from sqlalchemy import create_engine, text\n        engine = create_engine(\"sqlite://\")\n        try:\n            result = engine.execute(text(\"SELECT 1\")).scalar_one()\n        finally:\n            engine.dispose()\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "8f2c205da30efcbaaac4ca103ebc3b1a9229de60981820839a4d3dd26d5fd70e",
+      "checked_at": "2026-10-09T20:54:25.825848+00:00",
+      "observed": {
+        "deprecation": true,
+        "exception": null,
+        "outcome": "success",
+        "result": 1,
+        "warnings": [
+          {
+            "category": "RemovedIn20Warning",
+            "message": "The Engine.execute() method is considered legacy as of the 1.x series of SQLAlchemy and will be removed in 2.0. All statement execution in SQLAlchemy 2.0 is performed by the Connection.execute() method of Connection, or in the ORM by the Session.execute() method of Session. (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)"
+          }
+        ]
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-1.4.54/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/sqlalchemy_engine.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": true, \"exception\": null, \"outcome\": \"success\", \"result\": 1, \"warnings\": [{\"category\": \"RemovedIn20Warning\", \"message\": \"The Engine.execute() method is considered legacy as of the 1.x series of SQLAlchemy and will be removed in 2.0. All statement execution in SQLAlchemy 2.0 is performed by the Connection.execute() method of Connection, or in the ORM by the Session.execute() method of Session. (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)\"}]}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "sqlalchemy-engine-execute-14-future",
+      "environment": "sqlalchemy-1.4.54",
+      "snippet": "sqlalchemy_engine_future.py",
+      "recipe": "Engine.execute()",
+      "expected": {
+        "outcome": "exception",
+        "result": null,
+        "exception": "NotImplementedError",
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from sqlalchemy import create_engine, text\n        engine = create_engine(\"sqlite://\", future=True)\n        try:\n            result = engine.execute(text(\"SELECT 1\")).scalar_one()\n        finally:\n            engine.dispose()\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "3ed5d37f18ae2acd31d379fc2230cf3634fba6b8ca621842732920119bce43f0",
+      "checked_at": "2026-10-09T20:54:25.990767+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": "NotImplementedError",
+        "message": "This method is not implemented for SQLAlchemy 2.0.",
+        "outcome": "exception",
+        "result": null,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-1.4.54/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/sqlalchemy_engine_future.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": \"NotImplementedError\", \"message\": \"This method is not implemented for SQLAlchemy 2.0.\", \"outcome\": \"exception\", \"result\": null, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "sqlalchemy-connection-text-14",
+      "environment": "sqlalchemy-1.4.54",
+      "snippet": "sqlalchemy_connection.py",
+      "recipe": "Connection.execute(text()) with engine.begin()",
+      "expected": {
+        "outcome": "success",
+        "result": 1,
+        "exception": null,
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from sqlalchemy import create_engine, text\n        engine = create_engine(\"sqlite://\", future=True)\n        try:\n            with engine.begin() as connection:\n                result = connection.execute(text(\"SELECT 1\")).scalar_one()\n        finally:\n            engine.dispose()\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "758cf1b4e15cf7eb3aef9838ee60b30f08bc19b9bbc0b172e270f4173e3ade6e",
+      "checked_at": "2026-10-09T20:54:26.148869+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": null,
+        "outcome": "success",
+        "result": 1,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-1.4.54/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/sqlalchemy_connection.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": null, \"outcome\": \"success\", \"result\": 1, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "sqlalchemy-connection-text-14-legacy",
+      "environment": "sqlalchemy-1.4.54",
+      "snippet": "sqlalchemy_connection_legacy.py",
+      "recipe": "Connection.execute(text()) with engine.begin(), legacy1.4 mode",
+      "expected": {
+        "outcome": "success",
+        "result": 1,
+        "exception": null,
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from sqlalchemy import create_engine, text\n        engine = create_engine(\"sqlite://\", future=False)\n        try:\n            with engine.begin() as connection:\n                result = connection.execute(text(\"SELECT 1\")).scalar_one()\n        finally:\n            engine.dispose()\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "6e173167c038ab18310e70e7f70c6fb099508a929933b0e536467e935fe08925",
+      "checked_at": "2026-10-09T20:54:26.315818+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": null,
+        "outcome": "success",
+        "result": 1,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-1.4.54/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/sqlalchemy_connection_legacy.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": null, \"outcome\": \"success\", \"result\": 1, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "sqlalchemy-engine-execute-20",
+      "environment": "sqlalchemy-2.0.36",
+      "snippet": "sqlalchemy_engine.py",
+      "recipe": "Engine.execute()",
+      "expected": {
+        "outcome": "exception",
+        "result": null,
+        "exception": "AttributeError",
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from sqlalchemy import create_engine, text\n        engine = create_engine(\"sqlite://\")\n        try:\n            result = engine.execute(text(\"SELECT 1\")).scalar_one()\n        finally:\n            engine.dispose()\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "8f2c205da30efcbaaac4ca103ebc3b1a9229de60981820839a4d3dd26d5fd70e",
+      "checked_at": "2026-10-09T20:54:31.859049+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": "AttributeError",
+        "message": "'Engine' object has no attribute 'execute'",
+        "outcome": "exception",
+        "result": null,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-2.0.36/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/sqlalchemy_engine.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": \"AttributeError\", \"message\": \"'Engine' object has no attribute 'execute'\", \"outcome\": \"exception\", \"result\": null, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    },
+    {
+      "id": "sqlalchemy-connection-text-20",
+      "environment": "sqlalchemy-2.0.36",
+      "snippet": "sqlalchemy_connection.py",
+      "recipe": "Connection.execute(text()) with engine.begin()",
+      "expected": {
+        "outcome": "success",
+        "result": 1,
+        "exception": null,
+        "deprecation": false
+      },
+      "code": "\"\"\"Reviewed minimal API witness; no external or uploaded code is executed.\"\"\"\nimport json\nimport warnings\n\nobserved = {\"outcome\": None, \"result\": None, \"exception\": None, \"deprecation\": False, \"warnings\": []}\nwith warnings.catch_warnings(record=True) as recorded:\n    warnings.simplefilter(\"always\")\n    try:\n        from sqlalchemy import create_engine, text\n        engine = create_engine(\"sqlite://\", future=True)\n        try:\n            with engine.begin() as connection:\n                result = connection.execute(text(\"SELECT 1\")).scalar_one()\n        finally:\n            engine.dispose()\n        observed[\"outcome\"] = \"success\"\n        observed[\"result\"] = result\n    except Exception as error:\n        observed[\"outcome\"] = \"exception\"\n        observed[\"exception\"] = type(error).__name__\n        observed[\"message\"] = str(error)\n    observed[\"warnings\"] = [{\"category\": item.category.__name__, \"message\": str(item.message)} for item in recorded]\n    observed[\"deprecation\"] = any(issubclass(item.category, DeprecationWarning) for item in recorded)\nprint(json.dumps(observed, sort_keys=True))\n",
+      "code_hash": "758cf1b4e15cf7eb3aef9838ee60b30f08bc19b9bbc0b172e270f4173e3ade6e",
+      "checked_at": "2026-10-09T20:54:32.064731+00:00",
+      "observed": {
+        "deprecation": false,
+        "exception": null,
+        "outcome": "success",
+        "result": 1,
+        "warnings": []
+      },
+      "status": "PASS",
+      "execution": {
+        "command": [
+          "/tmp/versionverdict-witness-venvs/sqlalchemy-2.0.36/bin/python",
+          "-I",
+          "/workspace/VersionVerdict/fixtures/witnesses/authored/sqlalchemy_connection.py"
+        ],
+        "returncode": 0,
+        "stdout": "{\"deprecation\": false, \"exception\": null, \"outcome\": \"success\", \"result\": 1, \"warnings\": []}\n",
+        "stderr": ""
+      },
+      "checks": {
+        "outcome": true,
+        "result": true,
+        "exception": true,
+        "deprecation": true
+      }
+    }
+  ],
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "unverified": 0,
+    "total": 12
+  }
+}

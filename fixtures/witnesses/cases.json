@@ -1,0 +1,146 @@
+[
+  {
+    "id": "pydantic-parse-obj-v1",
+    "environment": "pydantic-1.10.15",
+    "snippet": "pydantic_parse_obj.py",
+    "recipe": "parse_obj()",
+    "expected": {
+      "outcome": "success",
+      "result": 7,
+      "exception": null,
+      "deprecation": false
+    }
+  },
+  {
+    "id": "pydantic-model-validate-v1",
+    "environment": "pydantic-1.10.15",
+    "snippet": "pydantic_model_validate.py",
+    "recipe": "model_validate()",
+    "expected": {
+      "outcome": "exception",
+      "result": null,
+      "exception": "AttributeError",
+      "deprecation": false
+    }
+  },
+  {
+    "id": "pydantic-parse-obj-v2",
+    "environment": "pydantic-2.9.2",
+    "snippet": "pydantic_parse_obj.py",
+    "recipe": "parse_obj()",
+    "expected": {
+      "outcome": "success",
+      "result": 7,
+      "exception": null,
+      "deprecation": true
+    }
+  },
+  {
+    "id": "pydantic-model-validate-v2",
+    "environment": "pydantic-2.9.2",
+    "snippet": "pydantic_model_validate.py",
+    "recipe": "model_validate()",
+    "expected": {
+      "outcome": "success",
+      "result": 7,
+      "exception": null,
+      "deprecation": false
+    }
+  },
+  {
+    "id": "pydantic-v1-shim-parse-obj-v2",
+    "environment": "pydantic-2.9.2",
+    "snippet": "pydantic_v1_parse_obj.py",
+    "recipe": "pydantic.v1 parse_obj()",
+    "expected": {
+      "outcome": "success",
+      "result": 7,
+      "exception": null,
+      "deprecation": false
+    }
+  },
+  {
+    "id": "pydantic-v1-shim-model-validate-v2",
+    "environment": "pydantic-2.9.2",
+    "snippet": "pydantic_v1_model_validate.py",
+    "recipe": "pydantic.v1 model_validate()",
+    "expected": {
+      "outcome": "exception",
+      "result": null,
+      "exception": "AttributeError",
+      "deprecation": false
+    }
+  },
+  {
+    "id": "sqlalchemy-engine-execute-14-legacy",
+    "environment": "sqlalchemy-1.4.54",
+    "snippet": "sqlalchemy_engine.py",
+    "recipe": "Engine.execute()",
+    "expected": {
+      "outcome": "success",
+      "result": 1,
+      "exception": null,
+      "deprecation": true
+    }
+  },
+  {
+    "id": "sqlalchemy-engine-execute-14-future",
+    "environment": "sqlalchemy-1.4.54",
+    "snippet": "sqlalchemy_engine_future.py",
+    "recipe": "Engine.execute()",
+    "expected": {
+      "outcome": "exception",
+      "result": null,
+      "exception": "NotImplementedError",
+      "deprecation": false
+    }
+  },
+  {
+    "id": "sqlalchemy-connection-text-14",
+    "environment": "sqlalchemy-1.4.54",
+    "snippet": "sqlalchemy_connection.py",
+    "recipe": "Connection.execute(text()) with engine.begin()",
+    "expected": {
+      "outcome": "success",
+      "result": 1,
+      "exception": null,
+      "deprecation": false
+    }
+  },
+  {
+    "id": "sqlalchemy-engine-execute-20",
+    "environment": "sqlalchemy-2.0.36",
+    "snippet": "sqlalchemy_engine.py",
+    "recipe": "Engine.execute()",
+    "expected": {
+      "outcome": "exception",
+      "result": null,
+      "exception": "AttributeError",
+      "deprecation": false
+    }
+  },
+  {
+    "id": "sqlalchemy-connection-text-20",
+    "environment": "sqlalchemy-2.0.36",
+    "snippet": "sqlalchemy_connection.py",
+    "recipe": "Connection.execute(text()) with engine.begin()",
+    "expected": {
+      "outcome": "success",
+      "result": 1,
+      "exception": null,
+      "deprecation": false
+    }
+  },
+  {
+    "id": "sqlalchemy-connection-text-14-legacy",
+    "environment": "sqlalchemy-1.4.54",
+    "snippet": "sqlalchemy_connection_legacy.py",
+    "recipe": "Connection.execute(text()) with engine.begin(), legacy1.4 mode",
+    "expected": {
+      "outcome": "success",
+      "result": 1,
+      "exception": null,
+      "deprecation": false
+    }
+  }
+]

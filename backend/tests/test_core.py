@@ -99,7 +99,8 @@ def test_manifest_range_duplicate_and_marker():
     assert version_for(p, 'pydantic') is None
     assert any('multiple declarations' in w for w in p.warnings)
     assert any('marker' in w for w in p.warnings)
-    assert len(p.dependencies) == 2
+    assert len(p.dependencies) == 3
+    assert version_for(p, 'sqlalchemy') is None
 
 
 def test_pyproject_and_rejected_path():

@@ -1,16 +1,71 @@
-# Evaluation record — October 9, 2026
+# Verification record — October 10, 2026 (IST)
 
-## Local results
+## Scope and reproduction
 
-- `PYTHONPATH=backend .venv/bin/python -m pytest backend/tests -q`: 11 passed, 1 skipped. Skipped test is explicit live SerpApi test; `SERPAPI_KEY` was absent.
-- `npm --prefix frontend run build`: TypeScript check and Vite production build passed.
-- Production-mode Uvicorn smoke: root HTML, demo fixture, and health endpoint returned 200. Pydantic and SQLAlchemy comparison endpoints returned 200.
-- Pydantic fixture: exact same candidate IDs for both profiles. V1 top `parse_obj()` COMPATIBLE; V2 top `model_validate()` COMPATIBLE. The non-top recipe is WRONG_VERSION for V1 and STALE for V2, respectively.
-- SQLAlchemy fixture: `Engine.execute()` STALE for 1.4 legacy mode; WRONG_VERSION for 2.0. `Connection.execute()` COMPATIBLE for both in verified fixture scope.
-- Removing fetched recipe text or migration fact yields UNCERTAIN.
-- Unknown Pydantic API namespace yields UNCERTAIN.
-- Isolated Python 3.12 package checks: Pydantic 1.10.15 `parse_obj()` works and `model_validate()` is absent; Pydantic 2.9.2 `model_validate()` works and `parse_obj()` emits a deprecation warning. SQLAlchemy 1.4.54 `Engine.execute()` works in legacy mode with RemovedIn20Warning and fails in future mode; SQLAlchemy 2.0.36 has no `Engine.execute()`, while `Connection.execute(text(...))` works.
+The evaluation and version witnesses are separate checks. Neither makes a live SerpApi request.
 
-## Limits
+```bash
+PYTHONPATH=backend .venv/bin/python -m pytest backend/tests -q
+npm --prefix frontend run build
+.venv/bin/python scripts/verify_versions.py --output fixtures/witnesses/report.json
+PYTHONPATH=backend .venv/bin/python scripts/evaluate.py --output fixtures/evaluation/report.json
+```
 
-Search JSON fixtures are illustrative, not captured SerpApi output. Direct HTTPS to SerpApi and documentation hosts was blocked by the current cloud proxy. The live test remains unrun. Docker build was attempted; package installation inside Docker could not resolve the cloud proxy hostname. Local source build and server smoke passed. This fixture set verifies specific rules, not general precision. No deployed URL or hackathon submission is claimed.
+The version runner prepares four isolated pinned environments. On subsequent runs, `--no-install` reuses those environments without package downloads. Reports record their actual commands, inputs, hashes, observations, and timestamps. Regenerate them after changing recipes or rules.
+
+## Actual package behavior
+
+[Version-witness report](../fixtures/witnesses/report.json): **12 passed, 0 failed, 0 unverified**, executed with Python **3.12.14**.
+
+| Environment | Demonstrated boundary |
+|---|---|
+| Pydantic 1.10.15 | Native `parse_obj()` succeeds; `model_validate()` is absent. |
+| Pydantic 2.9.2 | Native `model_validate()` succeeds; native `parse_obj()` warns; the explicit V1 shim retains its legacy API. |
+| SQLAlchemy 1.4.54 | Legacy `Engine.execute()` warns; future mode rejects it; supported connection execution works. |
+| SQLAlchemy 2.0.36 | `Engine.execute()` is absent; `Connection.execute(text("SELECT 1"))` succeeds in a managed transaction. |
+
+The full report includes each case and its expected and observed behavior. Witnesses use repository-authored snippets and an in-memory SQLite database. No uploaded repository code or retrieved recipe was executed. Passing these cases does not validate arbitrary web answers, other releases, operating systems, database drivers, or a user's application.
+
+## Curated applicability evaluation
+
+[Cases](../fixtures/evaluation/cases.json) · [Measured report](../fixtures/evaluation/report.json)
+
+The suite has **30 curated source scenarios and 31 expected labels**; one mixed-document scenario contains two recipes. HTML inputs are deliberately authored evaluation fixtures, not captures of pages at their cited documentation-family URLs.
+
+| Measure | Actual result | Denominator |
+|---|---|---|
+| Exact scenario match | 30 / 30 | Scenarios with exactly the expected ordered labels |
+| Label match | 31 / 31 | Expected recipe labels |
+| Definitive-label precision | 14 / 14 | Predicted `COMPATIBLE`, `STALE`, or `WRONG_VERSION` labels |
+| Definitive coverage | 14 / 31 | All evaluated recipe labels |
+| Uncertainty rate | 17 / 31 | All evaluated recipe labels |
+
+Expected label distribution: **7 compatible, 3 stale, 4 wrong-version, 17 uncertain**.
+
+Cases cover native and shim namespaces, migration boundaries, future mode, nonliteral/raw SQL, missing transactions for writes, mixed recipes, unknown versions, unsupported releases, and missing evidence. A high match rate on these curated examples is a regression result, **not production accuracy or general search precision**.
+
+## Application checks
+
+Final local checks: **132 backend tests passed; 2 explicitly opt-in live tests skipped** because no SerpApi key was configured. **TypeScript checks and the Vite production build passed**. **12 browser checks passed with zero console errors**, covering both illustrative demos, source evidence, recipe pairing, clipboard, witnesses, keyboard access, mobile layouts, and mocked failure states. See [browser verification](browser-verification.json) and [screenshots](screenshots/desktop.png). The GitHub workflow repeats backend/frontend checks without spending the shared search allowance.
+
+The application comparison must preserve the shared hit pool. One source can expose multiple recipe cards, so recipe-card count may exceed source count. Source quotes must support the exact recipe and version claim; a working URL alone is insufficient evidence.
+
+## Live verification and unmeasured claims
+
+Run the explicitly identified live integration test only with a configured backend key and network access:
+
+```bash
+RUN_LIVE_SERPAPI=1 PYTHONPATH=backend .venv/bin/python -m pytest backend/tests/test_live.py -q
+```
+
+The unauthenticated SerpApi endpoint was reachable and returned HTTP401. Successful live Google and Bing end-to-end retrieval has not been verified because `SERPAPI_KEY` is absent. Pydantic documentation now redirects to `pydantic.dev/docs/validation/`; trusted redirect handling is tested, but the new host requires applying the saved cloud network allowance. SQLAlchemy documentation fetching succeeded in the source smoke check. The available fixtures do not establish live integration, search quality, latency, or API reliability. No live success rate, real-world compatible-source precision, general ranking lift, or deployed uptime is claimed.
+
+The bundled search JSON and documentation HTML are illustrative fixtures. They are not SerpApi captures or actual fetched-page snapshots. Pinned official migration snapshots are a different artifact and retain their reviewed-source provenance.
+
+Earlier Docker build attempts encountered package-download proxy failures. A successful local source build does not establish a successful container deployment.
+
+## Next live evaluation
+
+After real integration works, save redacted genuine responses and evaluate the broad-query result order against the same candidate subset. Candidates discovered only by targeted or Bing queries need a separate merged-retrieval assessment; they have no original broad-query position.
+
+Measure citation support, definitive-label precision, coverage, wrong-version presence in the top three, latency, and actual attempts. Publish the labeled inputs and denominators alongside results. Keep live, cached, and illustrative records distinguishable.
