@@ -1,0 +1,6 @@
+{
+ "provenance": "Illustrative recorded shape assembled from official documentation; not captured from a live SerpApi response.",
+ "responses": [
+  {"organic_results": [{"title":"SQLAlchemy migration: Engine.execute()","link":"https://docs.sqlalchemy.org/en/20/changelog/migration_20.html","snippet":"Engine.execute() is removed in 2.0","position":1},{"title":"SQLAlchemy transactions: Connection.execute()","link":"https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html","snippet":"Use Connection.execute() with text()","position":2}]}
+ ]
+}

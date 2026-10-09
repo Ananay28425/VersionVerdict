@@ -1,0 +1,6 @@
+{
+ "https://docs.pydantic.dev/latest/migration/": "Pydantic migration guide. Various method names have been changed. The V1 parse_obj() method is replaced by model_validate() in V2. Deprecated old methods remain.",
+ "https://docs.pydantic.dev/latest/concepts/models/": "Validating data: User.model_validate({'id': 123, 'name': 'James'}). The model_validate() method validates a dictionary against a Pydantic model.",
+ "https://docs.sqlalchemy.org/en/20/changelog/migration_20.html": "Migration to SQLAlchemy 2.0. Engine.execute() is legacy in 1.4 and removed in 2.0. Use Connection.execute() instead.",
+ "https://docs.sqlalchemy.org/en/20/tutorial/dbapi_transactions.html": "Working with transactions: with engine.connect() as conn: result = conn.execute(text('select 1')). Connection.execute() runs a SQL statement."
+}

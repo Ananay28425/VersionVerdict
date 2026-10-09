@@ -1,0 +1,6 @@
+{
+ "provenance": "Illustrative recorded shape assembled from official documentation; not captured from a live SerpApi response.",
+ "responses": [
+  {"organic_results": [{"title":"Pydantic migration: parse_obj() legacy method","link":"https://docs.pydantic.dev/latest/migration/","snippet":"parse_obj() is replaced by model_validate()","position":1},{"title":"Pydantic models: model_validate()","link":"https://docs.pydantic.dev/latest/concepts/models/","snippet":"Use model_validate() to validate data","position":2}]}
+ ]
+}

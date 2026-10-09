@@ -1,0 +1,6 @@
+{
+  "pydantic_old": "Various method names have been changed; all non-deprecated BaseModel methods now have names matching either model_.* or __.*pydantic.*__. Where possible, we have retained the deprecated methods with their old names, but calling them will emit DeprecationWarnings.",
+  "pydantic_new": "Pydantic V1 | Pydantic V2 | `parse_obj()` | `model_validate()`",
+  "sqlalchemy_old": "The Engine.execute() function/method is considered legacy as of the 1.x series of SQLAlchemy and will be removed in 2.0.",
+  "sqlalchemy_new": "All statement execution in SQLAlchemy 2.0 is performed by the Connection.execute() method of Connection, or in the ORM by the Session.execute() method of Session."
+}
