@@ -1,0 +1,10 @@
+{
+  "technology": "Rust",
+  "language": "Rust",
+  "platform": "Linux x86_64",
+  "dependencies": [
+    {"name": "Rust", "version": "1.85.0"},
+    {"name": "tokio", "constraint": "^1.43"}
+  ],
+  "notes": "Illustrative declared context, not a resolved Cargo build. Rust 2024 edition."
+}

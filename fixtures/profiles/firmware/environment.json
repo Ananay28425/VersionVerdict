@@ -1,0 +1,11 @@
+{
+  "technology": "FreeRTOS",
+  "language": "C",
+  "platform": "bare metal",
+  "hardware": "STM32F407",
+  "dependencies": [
+    {"name": "FreeRTOS", "version": "11.1.0"},
+    {"name": "arm-none-eabi-gcc", "version": "13.2.1"}
+  ],
+  "notes": "Illustrative declared context, not a measured firmware build. Static allocation enabled."
+}

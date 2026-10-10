@@ -3,9 +3,11 @@
 import asyncio
 import hashlib
 import json
+import ipaddress
+import socket
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import unquote, urljoin, urlsplit
+from urllib.parse import unquote, urljoin, urlsplit, urlunsplit
 
 import httpx
 from bs4 import BeautifulSoup
@@ -19,6 +21,42 @@ FORMAT = 'versionverdict.source.v1'
 MAX_BYTES = 2_000_000
 MAX_TEXT = 120_000
 MAX_CODE = 12_000
+
+
+def public_allowed(url: str) -> bool:
+    """Syntax-level gate. DNS must additionally be checked and pinned at fetch time."""
+    try:
+        parsed = urlsplit(url)
+        host = parsed.hostname or ''
+        if (parsed.scheme != 'https' or parsed.port is not None or parsed.username is not None
+                or parsed.password is not None or not host or len(url) > 4000
+                or '%' in host or '\\' in url or re_control(url)
+                or host.casefold() == 'localhost' or '.' not in host
+                or host.casefold().endswith(('.localhost', '.local', '.internal', '.test', '.invalid', '.example'))):
+            return False
+        try:
+            return ipaddress.ip_address(host).is_global
+        except ValueError:
+            return True
+    except ValueError:
+        return False
+
+
+def re_control(value: str) -> bool:
+    return any(ord(character) < 32 or ord(character) == 127 for character in value)
+
+
+async def public_addresses(host: str) -> list[str]:
+    """Reject a mixed public/private DNS answer, then connect to a validated IP."""
+    try:
+        answers = await asyncio.wait_for(
+            asyncio.to_thread(socket.getaddrinfo, host, 443, type=socket.SOCK_STREAM), timeout=5)
+        addresses = list(dict.fromkeys(answer[4][0] for answer in answers))
+        if not addresses or not all(ipaddress.ip_address(address).is_global for address in addresses):
+            return []
+        return addresses
+    except (OSError, ValueError, TimeoutError):
+        return []
 
 
 def allowed(url: str) -> bool:
@@ -52,6 +90,10 @@ def extract(html: str, *, provenance: str = 'fetched_source', fetched_at: str | 
     scope_id = 0
     section_parts: list[str] = []
     section_indices: list[int] = []
+    passages: list[dict] = []
+    heading_stack: dict[int, str] = {}
+    heading_scopes: dict[int, int] = {}
+    extraction_complete = True
 
     def flush() -> None:
         context = ' '.join(section_parts)[:8_000]
@@ -59,18 +101,31 @@ def extract(html: str, *, provenance: str = 'fetched_source', fetched_at: str | 
             blocks[index]['context'] = context
 
     # A pre includes its descendant code/spans; process it once, preserving whitespace.
-    for node in root.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre']):
+    for node in root.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'pre']):
         if any(isinstance(parent, Tag) and parent.name == 'pre' for parent in node.parents):
             continue
         if node.name.startswith('h'):
             flush()
             scope_id += 1
             heading = node.get_text(' ', strip=True)[:300]
+            level = int(node.name[1])
+            heading_stack = {depth: value for depth, value in heading_stack.items() if depth < level}
+            heading_stack[level] = heading
+            heading_scopes = {depth: value for depth, value in heading_scopes.items() if depth < level}
+            heading_scopes[level] = scope_id
             section_id = node.get('id')
             section_parts = []
             section_indices = []
-        elif node.name == 'p':
-            section_parts.append(node.get_text(' ', strip=True))
+        elif node.name in {'p', 'li'}:
+            paragraph = node.get_text(' ', strip=True)
+            section_parts.append(paragraph)
+            if len(passages) < 300 and 0 < len(paragraph) <= 2000:
+                passages.append({'heading': heading, 'section_id': section_id,
+                                 'scope_id': scope_id, 'text': paragraph,
+                                 'heading_context': ' / '.join(heading_stack.values()),
+                                 'ancestor_scope_ids': list(heading_scopes.values())})
+            elif paragraph:
+                extraction_complete = False
         elif node.name == 'pre':
             code = node.get_text('', strip=False)
             if not code.strip() or len(code) > MAX_CODE:
@@ -79,10 +134,13 @@ def extract(html: str, *, provenance: str = 'fetched_source', fetched_at: str | 
             blocks.append({'heading': heading, 'section_id': section_id,
                            'scope_id': scope_id, 'code': code, 'context': ''})
             if len(blocks) >= 100:
+                extraction_complete = False
                 break
     flush()
     return json.dumps({'format': FORMAT, 'text': root.get_text(' ', strip=True)[:MAX_TEXT],
-                       'blocks': blocks, 'content_hash': hashlib.sha256(html.encode()).hexdigest(),
+                       'blocks': blocks, 'passages': passages,
+                       'extraction_complete': extraction_complete,
+                       'content_hash': hashlib.sha256(html.encode()).hexdigest(),
                        'provenance': provenance, 'fetched_at': fetched_at,
                        'source_url': source_url}, ensure_ascii=False)
 
@@ -99,21 +157,46 @@ def document(body: str) -> dict | None:
     return value
 
 
-async def fetch_text(url: str, client: httpx.AsyncClient) -> str | None:
-    if not allowed(url):
+async def _fetch_text(url: str, client: httpx.AsyncClient, *, universal: bool = False) -> str | None:
+    # Curated fixed documentation hosts retain the existing trust boundary.
+    # Other public hosts use IP pinning rather than weakening the SSRF gate.
+    universal = universal and not allowed(url)
+    gate = public_allowed if universal else allowed
+    if not gate(url):
         return None
     try:
         # Validate every hop ourselves. Pydantic's old docs host now redirects to
         # its canonical documentation path; no hop may expand the trust boundary.
         current_url = url
         for hop in range(3):
-            async with client.stream('GET', current_url, follow_redirects=False, timeout=8) as response:
+            if universal:
+                parsed = urlsplit(current_url)
+                addresses = await public_addresses(parsed.hostname)
+                if not addresses:
+                    return None
+                address = addresses[0]
+                authority = f'[{address}]' if ':' in address else address
+                pinned_url = urlunsplit(('https', authority, parsed.path or '/', parsed.query, ''))
+                # An explicit Request avoids inherited credentials/cookies. The
+                # validated IP is the TCP destination; SNI retains TLS hostname
+                # validation, closing the DNS-rebinding gap between checks and GET.
+                request = httpx.Request('GET', pinned_url, headers={'Host': parsed.hostname,
+                                         'Accept': 'text/html,application/xhtml+xml',
+                                         'Connection': 'close',
+                                         'User-Agent': 'VersionVerdict/0.3 evidence-fetcher'},
+                                        extensions={'sni_hostname': parsed.hostname,
+                                                    'timeout': {'connect': 8, 'read': 8, 'write': 8, 'pool': 8}})
+                response = await client.send(request, stream=True, follow_redirects=False, auth=None)
+            else:
+                request = client.build_request('GET', current_url, timeout=8)
+                response = await client.send(request, stream=True, follow_redirects=False, auth=None)
+            try:
                 if response.status_code in {301, 302, 303, 307, 308}:
                     location = response.headers.get('location')
                     if not location or hop == 2:
                         return None
                     target = urljoin(current_url, location)
-                    if not allowed(target):
+                    if not gate(target):
                         return None
                     current_url = target
                     continue
@@ -128,9 +211,19 @@ async def fetch_text(url: str, client: httpx.AsyncClient) -> str | None:
                     if len(chunks) > MAX_BYTES:
                         return None
                 html = chunks.decode(response.encoding or 'utf-8', errors='replace')
+            finally:
+                await response.aclose()
             return extract(html, fetched_at=datetime.now(timezone.utc).isoformat(), source_url=current_url)
         return None
     except (httpx.HTTPError, ValueError, LookupError):
+        return None
+
+
+async def fetch_text(url: str, client: httpx.AsyncClient, *, universal: bool = False) -> str | None:
+    """Bound the complete operation as well as each DNS/connect/read step."""
+    try:
+        return await asyncio.wait_for(_fetch_text(url, client, universal=universal), timeout=20)
+    except TimeoutError:
         return None
 
 
@@ -140,16 +233,18 @@ def fixture_text(hit: SearchHit) -> str | None:
     return extract(html, provenance='authored_fixture') if isinstance(html, str) else None
 
 
-async def collect(hits: list[SearchHit], client: httpx.AsyncClient, mode: str) -> dict[str, str]:
+async def collect(hits: list[SearchHit], client: httpx.AsyncClient, mode: str,
+                  *, universal: bool = False) -> dict[str, str]:
     semaphore = asyncio.Semaphore(4)
 
     async def one(hit: SearchHit):
         if mode == 'recorded':
             return fixture_text(hit)
         async with semaphore:
-            return await fetch_text(hit.url, client)
+            return await fetch_text(hit.url, client, universal=universal)
 
-    candidates = [hit for hit in hits if allowed(hit.url)][:8]
+    gate = public_allowed if universal else allowed
+    candidates = [hit for hit in hits if gate(hit.url)][:8]
     texts = await asyncio.gather(*(one(hit) for hit in candidates))
     return {hit.id: body for hit, body in zip(candidates, texts) if body}
 

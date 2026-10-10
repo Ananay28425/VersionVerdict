@@ -16,6 +16,7 @@ class Dependency(BaseModel):
     constraint: str
     exact: str | None = None
     source: str
+    ecosystem: str = 'python'
 
 
 class Profile(BaseModel):
@@ -24,6 +25,11 @@ class Profile(BaseModel):
     warnings: list[str] = Field(default_factory=list)
     sqlalchemy_future: bool | None = None
     pydantic_api_mode: str = 'native'
+    technology: str | None = None
+    language: str | None = None
+    platform: str | None = None
+    hardware: str | None = None
+    notes: str | None = None
 
 
 class SearchHit(BaseModel):
@@ -66,6 +72,8 @@ class Card(BaseModel):
     boundary: str | None = None
     preconditions: list[str] = Field(default_factory=list)
     witness_id: str | None = None
+    relevance_score: int = 0
+    ranking_reasons: list[str] = Field(default_factory=list)
 
 
 class ProfileResult(BaseModel):

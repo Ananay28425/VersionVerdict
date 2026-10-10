@@ -8,7 +8,7 @@ class InterfaceBoundary extends Component<{ children: ReactNode }, { failed: boo
   state = { failed: false }
   static getDerivedStateFromError() { return { failed: true } }
   render() {
-    if (this.state.failed) return <main className="startup-fallback" role="alert"><h1>&gt;_ VersionVerdict</h1><p>The interface could not start. Reload to fetch the current build.</p><p>If the problem persists, restart the combined service with <code>./scripts/start_preview.sh</code>.</p><button type="button" onClick={() => window.location.reload()}>Reload interface</button></main>
+    if (this.state.failed) return <main className="startup-fallback" role="alert"><h1>&gt;_ VersionVerdict</h1><p>The interface could not start. Reload to fetch the current build.</p><p>If the problem persists, check that the frontend server is running and reload the page.</p><button type="button" onClick={() => window.location.reload()}>Reload interface</button></main>
     return this.props.children
   }
 }

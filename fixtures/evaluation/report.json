@@ -2,8 +2,8 @@
   "schema_version": 1,
   "rule_version": "2026-10-10-scoped-v2",
   "rules_source_hash": "47ec3d67e8aa6d6c901852a7c1ec3ca7378593812ea990cefb3d662477303a9c",
-  "extractor_source_hash": "5f2c299f93a7ffe4348876602bdc741ad6ebf786e7a5ecb50c63fe4dccf6dc8d",
-  "checked_at": "2026-10-09T21:00:04.605274+00:00",
+  "extractor_source_hash": "da485f2d27d99b4d43b7b08d5a2fa0366c56aec70065cb3ec420437ec12f954b",
+  "checked_at": "2026-10-10T12:06:15.130675+00:00",
   "scope": "Independently authored labeled scenarios. HTML and snippets are synthetic unit/evaluation inputs, not captured SerpApi responses or actual fetched pages. Expected labels encode explicit reviewed semantics, not production accuracy.",
   "limitations": [
     "Curated fixtures are not a random sample of real-world results.",

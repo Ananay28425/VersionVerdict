@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-10-10T12:07:21.642026+00:00",
+  "scope": "One Google-only live submission for a declared non-Python stack. Does not validate firmware or the full solution.",
+  "configured": true,
+  "http_status": 200,
+  "receipt": {
+    "engines": [
+      "google"
+    ],
+    "api_calls": 3,
+    "cache_hits": 0,
+    "budget_limit": 50,
+    "budget_used": 3,
+    "budget_remaining": 47,
+    "cache_ttl_seconds": 86400,
+    "quota_scope": "Application allocation; not the SerpApi account balance."
+  },
+  "candidate_count": 18,
+  "mode": "live",
+  "warnings": [
+    "Some documentation could not be fetched or exceeded the bounded fetch limit. Unverified sources remain UNCERTAIN."
+  ],
+  "labels": [
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN",
+    "UNCERTAIN"
+  ],
+  "evidence_count": 0,
+  "source_urls": [
+    "https://forums.freertos.org/t/freertos-task-stack-memory-saftey-direct-task-notificaiton/12485",
+    "https://www.merriam-webster.com/dictionary/bare",
+    "https://github.com/holepunchto/bare",
+    "https://gamma.app/docs/interTaskCommFreeRTOS-jcgdn0j0x8s0tsh",
+    "https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2016/freertos_TaskNotification_or_Event_groups_9aa318c5j.html",
+    "https://www.baresnacks.com/",
+    "https://forums.freertos.org/t/task-notification-problems/11840",
+    "https://royalsocietypublishing.org/rspa/article/193/1032/120/6686/Natural-evaporation-from-open-water-bare-soil-and",
+    "https://cheriot.org/book/porting_from_freertos.html",
+    "https://www.instagram.com/bare.bombay/?hl=en",
+    "https://www.scribd.com/document/953099513/253-EEE-4523-Lecture-3",
+    "https://learn.microsoft.com/en-us/azure/aks-hybrid-edge/bare-metal/aks-bare-metal-overview",
+    "https://github.com/FreeRTOS/FreeRTOS-Kernel-Community-Supported-Ports/blob/main/CCRH/RH850_F1KM_S4/portasm.s",
+    "https://www.reddit.com/r/embedded/comments/10o0udj/what_is_bare_metal_programming_and_how_to_get/",
+    "https://hotmesser.substack.com/p/bare-nails-are-my-quiet-rebellion",
+    "https://forums.freertos.org/latest?page=104",
+    "https://pubmed.ncbi.nlm.nih.gov/11244040/",
+    "https://forums.freertos.org/t/free-rtos-task-notifications/16891/2"
+  ],
+  "identical_repeat": {
+    "http_status": 200,
+    "mode": "cached",
+    "receipt": {
+      "engines": [
+        "google"
+      ],
+      "api_calls": 0,
+      "cache_hits": 2,
+      "budget_limit": 50,
+      "budget_used": 3,
+      "budget_remaining": 47,
+      "cache_ttl_seconds": 86400,
+      "quota_scope": "Application allocation; not the SerpApi account balance."
+    },
+    "candidate_pool_unchanged": true
+  },
+  "capture": "fixtures/live/2026-10-10-freertos-google.json"
+}

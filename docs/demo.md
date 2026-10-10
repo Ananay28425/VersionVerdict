@@ -1,6 +1,6 @@
 # Recording and teammate runbook
 
-The demo is a comparison of the same retrieved candidates under two declared dependency environments. It is not a general-purpose answer generator.
+The demo compares the same retrieved candidates under two declared environments, then shows the general stack workflow and an exportable investigation receipt.
 
 ## Prepare once
 
@@ -14,12 +14,12 @@ The demo is a comparison of the same retrieved candidates under two declared dep
 
 | Time | Screen and narration |
 |---|---|
-| 0:00–0:20 | Open VersionVerdict. “A valid answer for one dependency version can be wrong for another. VersionVerdict compares source evidence with declared Python dependencies.” |
+| 0:00–0:20 | Open VersionVerdict. “A valid answer for one dependency version can be wrong for another. VersionVerdict compares source evidence with declared environments, from firmware to frameworks.” Show the persisted color selector briefly. |
 | 0:20–0:55 | Load the Pydantic comparison. Show `pydantic==1.10.15` and `pydantic==2.9.2`, with native APIs selected. Submit the same question. State whether this run is live, cached, or illustrative. |
 | 0:55–1:30 | Show the shared candidate set: `parse_obj()` applies to V1 but is deprecated in V2; `model_validate()` applies to V2 and is absent from V1. Open recipe and migration evidence. Explain the boundary rather than just reading a badge. |
-| 1:30–2:00 | Load SQLAlchemy 1.4.54 versus 2.0.36. Show why `Engine.execute()` is legacy in 1.4 and removed in 2.0. Inspect `Connection.execute(text(...))` evidence. Explain that statement and transaction context can affect applicability. |
-| 2:00–2:25 | Open the committed version-witness report. Show package versions, the trusted authored snippet, and the actual output or warning. These checks reproduce those recipes, not arbitrary web code. |
-| 2:25–2:45 | Show a range or unknown context returning `UNCERTAIN`. Show request-budget and cache indicators. Explain that optional Bing supplements discovery; it does not strengthen a verdict without source evidence. |
+| 1:30–1:55 | Load SQLAlchemy 1.4.54 versus 2.0.36. Show why `Engine.execute()` is legacy in 1.4 and removed in 2.0. Inspect `Connection.execute(text(...))` evidence. |
+| 1:55–2:20 | Open a committed version witness. Show package versions, the authored snippet, and its actual output or warning. Export the investigation as Markdown for a review or issue. |
+| 2:20–2:45 | Enter a Rust or firmware stack using manual context, or upload `fixtures/profiles/firmware/environment.json`. Explain that explicit source requirements can be evaluated; missing hardware, API, or version evidence stays uncertain. Show request-budget and cache indicators. |
 | 2:45–3:00 | Show repository and setup commands. “SerpApi supplies live technical discovery. VersionVerdict adds dependency profiling, evidence rules, and inspectable version-specific comparisons.” |
 
 Do not edit a failed live attempt into a successful claim. Use a labelled illustrative run if credentials or the network fail; disclose that limitation in the video and submission.
@@ -37,9 +37,9 @@ Do not edit a failed live attempt into a successful claim. Use a labelled illust
 
 Suggested engine description, after both live integrations have been exercised:
 
-> VersionVerdict uses SerpApi Google Search and optional Bing Search to discover technical sources. It profiles declared Python dependencies, fetches permitted official documentation, and ranks recognized recipes against each environment using source-backed version rules.
+> VersionVerdict uses SerpApi Google Search and optional Bing Search to discover technical sources. It profiles declared stack context and supported manifests, inspects bounded public source evidence, and ranks explicit version requirements or reviewed recipes against each environment.
 
-Until live verification succeeds, say **“implemented integration”**, and disclose the unverified live status.
+Google retrieval and cache reuse now have a genuine sanitized cloud capture in `docs/live-verification.json`. General source inspection was unavailable there, so that capture contains only uncertain verdicts. Optional Bing remains unverified. A submission demo should use a working local or deployed source-inspection path and state each result's actual live/cached/illustrative status.
 
 ## Handoff to a teammate
 

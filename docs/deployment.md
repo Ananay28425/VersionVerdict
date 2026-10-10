@@ -35,7 +35,7 @@ Use a host that supports one Docker service with a persistent disk. Configure:
 - `SERPAPI_KEY`: secret environment variable.
 - `SERPAPI_REQUEST_BUDGET=50`: an application request-attempt allocation; not the account's remaining search balance.
 - `VERSIONVERDICT_CACHE_DIR`: a directory on the mounted disk, if different from the default.
-- Outbound HTTPS to `serpapi.com`, `docs.pydantic.dev`, `pydantic.dev`, and `docs.sqlalchemy.org`.
+- Outbound HTTPS to `serpapi.com` and retrieved public source hosts. Reviewed demos use `docs.pydantic.dev`, `pydantic.dev`, and `docs.sqlalchemy.org`; arbitrary stack evidence needs access to its own documentation hosts and validated public IP destinations. Private destinations remain blocked by the application.
 - HTTPS ingress and a health check on `/api/health`.
 
 Keep the SQLite cache and request ledger across redeployments. Deleting that directory resets the local ledger, not the SerpApi account's usage. Multiple independent deployments have independent ledgers; their combined usage still counts against a shared account.

@@ -1,0 +1,83 @@
+{
+  "scope": "Offline metadata-only reranking of a genuine saved candidate pool; not a new live API response or production relevance benchmark.",
+  "capture": "fixtures/live/2026-10-10-freertos-google.json",
+  "capture_sha256": "2e28ecc01461ed3e3d3f25be8dbec59260643753c33e66e38caf1a171f778e72",
+  "technology": "FreeRTOS",
+  "query": "FreeRTOS task notification API requirements",
+  "candidate_count": 18,
+  "before_top_three": [
+    {
+      "id": "607be7f6ba28af62",
+      "title": "FreeRTOS task stack memory saftey, direct task notificaiton",
+      "url": "https://forums.freertos.org/t/freertos-task-stack-memory-saftey-direct-task-notificaiton/12485",
+      "verdict": "UNCERTAIN",
+      "score": 299,
+      "relevance_score": 0,
+      "ranking_reasons": []
+    },
+    {
+      "id": "abff68f00c8b6842",
+      "title": "BARE Definition & Meaning",
+      "url": "https://www.merriam-webster.com/dictionary/bare",
+      "verdict": "UNCERTAIN",
+      "score": 299,
+      "relevance_score": 0,
+      "ranking_reasons": []
+    },
+    {
+      "id": "a7dfdf1f64c80b5f",
+      "title": "holepunchto/bare: Small and modular JavaScript runtime ...",
+      "url": "https://github.com/holepunchto/bare",
+      "verdict": "UNCERTAIN",
+      "score": 298,
+      "relevance_score": 0,
+      "ranking_reasons": []
+    }
+  ],
+  "after_top_three": [
+    {
+      "id": "607be7f6ba28af62",
+      "title": "FreeRTOS task stack memory saftey, direct task notificaiton",
+      "url": "https://forums.freertos.org/t/freertos-task-stack-memory-saftey-direct-task-notificaiton/12485",
+      "verdict": "UNCERTAIN",
+      "score": 334,
+      "relevance_score": 35,
+      "ranking_reasons": [
+        "Target name appears in result title, snippet or URL (+20).",
+        "Query subject terms in result metadata: notification, task (+10).",
+        "Target and query subject both match (+5).",
+        "Search metadata affects ordering only; verdict requires fetched source evidence."
+      ]
+    },
+    {
+      "id": "9c3d272676d7586d",
+      "title": "TaskNotification or Event groups",
+      "url": "https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2016/freertos_TaskNotification_or_Event_groups_9aa318c5j.html",
+      "verdict": "UNCERTAIN",
+      "score": 332,
+      "relevance_score": 35,
+      "ranking_reasons": [
+        "Target name appears in result title, snippet or URL (+20).",
+        "Query subject terms in result metadata: notification, task (+10).",
+        "Target and query subject both match (+5).",
+        "Search metadata affects ordering only; verdict requires fetched source evidence."
+      ]
+    },
+    {
+      "id": "7e6eb5f2f6969723",
+      "title": "Task Notification Problems - Kernel",
+      "url": "https://forums.freertos.org/t/task-notification-problems/11840",
+      "verdict": "UNCERTAIN",
+      "score": 331,
+      "relevance_score": 35,
+      "ranking_reasons": [
+        "Target name appears in result title, snippet or URL (+20).",
+        "Query subject terms in result metadata: notification, task (+10).",
+        "Target and query subject both match (+5).",
+        "Search metadata affects ordering only; verdict requires fetched source evidence."
+      ]
+    }
+  ],
+  "ids_and_verdicts_unchanged": true,
+  "outbound_requests": 0
+}

@@ -42,8 +42,9 @@ def test_plan_two_searches_shared_between_profiles_and_bing_opt_in():
     assert 'site:' not in primary[0].query and 'site:docs.pydantic.dev' in primary[1].query
     assert search_params(expanded[2]) == {'engine': 'bing', 'q': expanded[2].query, 'mkt': 'en-IN'}
     assert [item.engine for item in plan('execute SQL', 'sqlalchemy')] == ['google', 'google']
+    assert [item.engine for item in plan('question', 'unknown')] == ['google', 'google']
     with pytest.raises(ValueError):
-        plan('question', 'unknown')
+        plan('question', '')
 
 
 def test_google_bing_merge_keeps_original_ranks_and_search_ids():

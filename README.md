@@ -4,7 +4,7 @@
 
 *Repository-aware developer search powered by SerpApi.*
 
-VersionVerdict finds technical sources and checks a narrow set of recognized Python recipes against dependencies declared in a project. Compare two environments against **the same retrieved candidates** and inspect why their rankings change.
+VersionVerdict searches technical sources against a declared software or hardware environment. Use a manifest or describe a stack explicitly: firmware, toolchains, runtimes, frameworks, and libraries. Compare two environments against **the same retrieved candidates** and inspect the evidence behind each verdict.
 
 **One question. Different dependency versions. Different verdicts.**
 
@@ -13,6 +13,8 @@ VersionVerdict finds technical sources and checks a narrow set of recognized Pyt
 Demo video and public deployment URLs are not yet published.
 
 [Desktop screenshot](docs/screenshots/desktop.png) · [Mobile screenshot](docs/screenshots/mobile.png) · [Version comparison](docs/screenshots/comparison.png)
+
+Themes: [Pop art](docs/screenshots/theme-pop.png) · [Vibrant](docs/screenshots/theme-vibrant.png) · [Industrial](docs/screenshots/theme-industrial.png) · [Retro](docs/screenshots/theme-retro.png)
 
 <details>
 <summary>View the terminal workspace</summary>
@@ -29,21 +31,22 @@ VersionVerdict separates search relevance from applicability. A good search posi
 
 ## What the application does
 
-- Reads `requirements.txt` and `pyproject.toml` safely, distinguishing exact declared pins from ranges and unresolved declarations.
-- Plans two Google searches: the developer's question and a bounded official-documentation query covering the migration boundary.
+- Reads Python, JavaScript, Rust, Go, and PlatformIO manifests, or an explicit `environment.json` for any technology stack. Exact declared pins stay separate from ranges and unresolved declarations.
+- Plans two Google searches: the developer's question and a bounded version/requirements query for the selected technology.
 - Optionally adds one SerpApi Bing Search request for supplementary discovery.
-- Normalizes and deduplicates candidates, then fetches allowlisted official documentation for evidence.
-- Extracts scoped recipe evidence and combines it with reviewed, pinned migration facts.
+- Normalizes and deduplicates candidates, then retrieves bounded source content over HTTPS.
+- Extracts explicit version requirements from relevant source passages; reviewed Python recipe rules also use pinned migration facts.
 - Classifies supported recipes conservatively and ranks a shared candidate set independently for each environment.
-- Provides a terminal-style React workspace with manifest previews, command input, keyboard shortcuts, version comparisons, and inspectable evidence.
+- Provides a terminal-style React workspace with manual stack context, manifest previews, keyboard shortcuts, version comparisons, inspectable evidence, and four persisted color themes.
+- Exports investigation reports as JSON or Markdown, with declared context, retrieval provenance, verdicts, and supporting source quotes.
 - Uses a persistent SQLite cache and local request-attempt allocation to reduce repeated searches on a shared account.
 
 It does not execute uploaded repository code, generate fixes with an LLM, or infer installed dependencies from manifest declarations.
 
 | Verdict | Meaning |
 |---|---|
-| `COMPATIBLE` | Evidence supports the recognized recipe for this declared version and confirmed context. |
-| `WRONG_VERSION` | Evidence establishes that the recipe is unavailable in this version or mode. |
+| `COMPATIBLE` | Evidence supports a reviewed recipe or explicit version requirement for this declared context. |
+| `WRONG_VERSION` | Evidence establishes a version contradiction for the scoped recipe or requirement. |
 | `STALE` | The recipe is deprecated or superseded in this environment; old advice is not rejected merely for being old. |
 | `UNCERTAIN` | Version, namespace, runtime conditions, or source evidence cannot establish applicability. |
 
@@ -68,15 +71,15 @@ Trusted authored version witnesses reproduce selected API behavior in isolated, 
 
 ```mermaid
 flowchart TD
-  A[Python dependency manifests] --> B[Environment profiler]
+  A[Dependency manifests or declared stack context] --> B[Environment profiler]
   Q[Question or error] --> C[Bounded query planner]
   B --> C
   C --> D[SerpApi Google Search]
   C --> O[Optional SerpApi Bing Search]
   D --> E[Cached, normalized shared candidates]
   O --> E
-  E --> F[Official source evidence]
-  F --> G[Recipe and migration rules]
+  E --> F[Retrieved source passages]
+  F --> G[Explicit version requirements and reviewed rules]
   B --> G
   G --> H[Independent environment rankings]
   H --> I[Verdicts, comparison, evidence]
@@ -84,13 +87,33 @@ flowchart TD
 
 ### Environment and evidence boundaries
 
-Each profile accepts up to two manifests and 256 KiB combined. The profiler reads PEP 621 dependencies and a limited subset of Poetry declarations. A range is preserved as a range, not resolved to a fictional installed version. Markers without target context, duplicate declarations, unsupported directives, and direct URLs produce warnings or unknown versions.
+Each profile accepts up to two manifests and 256 KiB combined. Supported filenames are `requirements.txt`, `pyproject.toml`, `package.json`, `Cargo.toml`, `go.mod`, `platformio.ini`, and `environment.json`. The profiler does not install packages or resolve manifests. A range is preserved as a range, not resolved to a fictional installed version. Markers, conditional build declarations, duplicates, workspace dependencies, and unsupported directives produce warnings or unknown versions.
 
-Rules are intentionally limited to Pydantic `parse_obj()` / `model_validate()` and SQLAlchemy `Engine.execute()` / `Connection.execute()`. The reviewed version windows are Pydantic 1.10 and 2.0–2.14, and SQLAlchemy 1.4 and 2.0. Prerelease, development, post-release, local, and unsupported versions remain uncertain. Pydantic native versus `pydantic.v1` namespace and SQLAlchemy 1.4 future mode are explicit context, not guessed from the query. The V1 shim namespace is available only from Pydantic 1.10.17 onward.
+For a stack without a supported manifest format, use the manual context editor or provide `environment.json`. For example:
 
-Only `docs.pydantic.dev`, the canonical `pydantic.dev/docs/validation/` path, and `docs.sqlalchemy.org` are fetched for live recipe evidence. Fetches have time and size bounds. At most two redirects are followed, with every target checked against the official documentation boundary. Other hosts may contribute search candidates, but do not receive definitive labels without supported evidence. HTML code blocks are parsed for the supported APIs without execution, alongside their surrounding section. One page can produce separate recipe cards. Recipe evidence carries its section, full-document hash, and fetch timestamp. The separate migration evidence is a hash-verified pinned official snapshot, labelled `reviewed_snapshot`; it is not fetched live during each search.
+```json
+{
+  "technology": "FreeRTOS",
+  "language": "C",
+  "platform": "bare metal",
+  "hardware": "STM32F407",
+  "dependencies": [
+    {"name": "FreeRTOS", "version": "11.1.0"},
+    {"name": "arm-none-eabi-gcc", "version": "13.2.1"}
+  ],
+  "notes": "Static allocation enabled; Cortex-M4 target."
+}
+```
 
-Ranking prioritizes `COMPATIBLE`, then `UNCERTAIN`, `STALE`, and `WRONG_VERSION`, with evidence and original result position used for ordering. Rank scores are ordering signals, not probabilities of factual correctness.
+`version` declares an exact value; `constraint` declares a range instead. Omit both when unknown. These are user declarations, not measured runtime facts. Hardware, platform, and notes are preserved for inspection; they are not a hardware or ABI validator.
+
+General search accepts any technology name. Its deterministic evidence matcher supports a limited grammar of explicit, named version requirements in relevant passages. It does not claim to understand every API, firmware configuration, or version scheme; unresolved or qualified conditions remain uncertain. A compatible version requirement is not proof that an entire proposed solution will work.
+
+The deeper reviewed recipe rules cover Pydantic `parse_obj()` / `model_validate()` and SQLAlchemy `Engine.execute()` / `Connection.execute()`. Their reviewed version windows are Pydantic 1.10 and 2.0–2.14, and SQLAlchemy 1.4 and 2.0. Prerelease, development, post-release, local, and unsupported versions remain uncertain in these rules. Pydantic native versus `pydantic.v1` namespace and SQLAlchemy 1.4 future mode are explicit context, not guessed from the query. The V1 shim namespace is available only from Pydantic 1.10.17 onward.
+
+Reviewed recipe fetching retains its official documentation boundary. General evidence fetching permits public HTTPS pages, rejects private/local addresses and credentials, validates redirects, and pins checked DNS addresses. Fetches have time, size, and concurrency bounds. Network policies or anti-bot protection can prevent source inspection; a snippet cannot substitute for that missing evidence. HTML code blocks are parsed without execution alongside their surrounding section. One page can produce separate recipe cards. Evidence carries its section, document hash, and fetch timestamp. Reviewed migration evidence is a hash-verified pinned official snapshot, labelled `reviewed_snapshot`; it is not fetched live during each search.
+
+Ranking prioritizes `COMPATIBLE`, then `UNCERTAIN`, `STALE`, and `WRONG_VERSION`. General results use bounded target and question-term matches in titles, snippets, and URLs within these verdict groups; inspectable ranking reasons distinguish these metadata signals from source evidence. Rank scores are ordering signals, not probabilities of factual correctness.
 
 ## SerpApi engines and resources
 
@@ -111,13 +134,15 @@ Useful official resources:
 - [Search Tools](https://serpapi.github.io/serpapi-search-tools-python/): agent tooling reference; not an application dependency.
 - [Blog](https://serpapi.com/blog/) and [BuiltWithSerpApi](https://serpapi.github.io/BuiltWithSerpApi/): examples and prior art.
 
-**Live verification status:** a successful live end-to-end Google or Bing run has not been verified in the development cloud environment. Do not cite the illustrative fixtures as proof of live search.
+**Live verification status:** a genuine Google submission for a declared FreeRTOS context returned 18 deduplicated candidates. Its receipt records three HTTP attempts, including a retry; an identical repeat reused both cached searches with zero new calls and an unchanged candidate pool. All results remained uncertain because general source evidence was unavailable in the restricted cloud environment. This verifies retrieval and conservative failure behavior, not firmware compatibility. Optional Bing has not been live-verified here. Inspect the [verification record](docs/live-verification.json) and [sanitized genuine response](fixtures/live/2026-10-10-freertos-google.json); illustrative fixtures remain separate.
+
+That capture exposed unrelated results for loose platform terms. The final planner keeps the broad query focused on the named technology and groups version alternatives. An [offline replay](docs/live-ranking-replay.json) of the original candidates now places three FreeRTOS notification sources first without changing any verdict. The revised planner has unit coverage; it has not consumed another live search for verification.
 
 ### Using a shared 250-search account wisely
 
 The default application allocation is **50 request attempts**, configured by `SERPAPI_REQUEST_BUDGET`. It counts HTTP attempts, including failures, rather than reporting billed search credits or the account's remaining balance. This local safeguard leaves room in a shared account for teammates, experiments, and the final recording.
 
-An uncached submission plans **two Google requests**, or **three requests with Bing enabled**. Retries reserve additional attempts. Repeating the same search or changing only dependency context reuses the 24-hour response cache. Refresh bypasses it and consumes attempts. Source fetches, offline fixtures, unit tests, evaluation, and trusted version witnesses do not spend SerpApi searches.
+An uncached submission plans **two Google requests**, or **three requests with Bing enabled**. Retries reserve additional attempts. Identical generated searches reuse the 24-hour response cache. Both environments share one retrieval pool; they do not run separate searches. Changing a general stack's version or platform can change a targeted query and require a new request, while the reviewed examples reuse their stable queries. Refresh bypasses the cache and consumes attempts. Source fetches, offline fixtures, unit tests, evaluation, and trusted version witnesses do not spend SerpApi searches.
 
 Keep the persistent cache and ledger. Separate deployments have separate local allocations even when they use the same account; check the account dashboard for actual shared usage. The application never fabricates an account-remaining balance.
 
@@ -159,6 +184,16 @@ Leave Vite running. In a second PowerShell terminal, also at the repository root
 
 Open <http://127.0.0.1:5173>. Vite forwards `/api` to port 3000. If you previously started Uvicorn on port 8000, stop that process with `Ctrl+C` before starting this command. A root `.env` file is loaded by the backend on startup; restart Uvicorn after editing it. Keep `.env` out of Git and revoke any key pasted into a chat or public log.
 
+If the Python launcher cannot find 3.12 and Anaconda is installed, use the Conda setup already supported by the application:
+
+```powershell
+conda create -n versionverdict python=3.12 -y
+conda run -n versionverdict python -m pip install -r backend\requirements-lock.txt
+conda run --no-capture-output -n versionverdict python -m uvicorn app.main:app --app-dir backend --reload --port 3000
+```
+
+Skip environment creation on later runs. Keep `npm --prefix frontend run dev` running in a second terminal.
+
 The cloud environment onboarding screen does not provide an embedded web preview. A running process there does not create a public deployment URL. Use a host's port-forwarding facility or the [deployment guide](docs/deployment.md); the committed screenshots show the tested interface.
 
 If the interface cannot load its JavaScript, the page displays startup instructions. If the backend is unavailable, the rendered workspace shows an API error and a retry action. Missing assets return 404 instead of an HTML response, and the entry page is revalidated after builds.
@@ -183,20 +218,21 @@ export SERPAPI_REQUEST_BUDGET=50
 export VERSIONVERDICT_CACHE_DIR=.cache/versionverdict
 ```
 
-Restart the backend after changing its environment. Allow outbound HTTPS to `serpapi.com`, `docs.pydantic.dev`, `pydantic.dev`, and `docs.sqlalchemy.org`. Never put the key in a frontend `VITE_*` variable, log, or commit. See [the API-key security boundary](docs/security.md) for exactly where it is sent and who must be trusted to run the backend.
+Restart the backend after changing its environment. SerpApi authentication goes only to `serpapi.com`. Source inspection also needs outbound HTTPS to the retrieved public documentation hosts. A restricted cloud proxy can block general source fetching, including connections to validated IP addresses; the backend then preserves uncertainty. Never put the key in a frontend `VITE_*` variable, log, or commit. See [the API-key security boundary](docs/security.md) for exactly where it is sent and who must be trusted to run the backend.
 
 ### Use the comparison page
 
-1. Load a Pydantic or SQLAlchemy preset, or upload named `requirements.txt` / `pyproject.toml` files.
-2. Enter a question and confirm the relevant API namespace or future-mode context independently for each environment.
+1. Enter a technology and provide a manifest or manual stack context. Optional Pydantic and SQLAlchemy demos remain available.
+2. Enter a question. Enable comparison when evaluating an upgrade, and declare each environment independently.
 3. Choose live retrieval or the clearly labelled illustrative fixture. Leave supplementary Bing off unless you need additional discovery.
-4. Submit and compare verdicts over the same candidates. Open supporting evidence and inspect uncertainty before applying advice.
+4. Submit and inspect verdicts over the same candidates. Open supporting evidence and inspect uncertainty before applying advice.
+5. Select a comfortable theme and download an evidence report for a pull request, issue, or teammate.
 
 `POST /api/search` accepts these multipart fields:
 
 | Fields | Values |
 |---|---|
-| `query`, `library` | Question of 3–240 characters; `pydantic` or `sqlalchemy` |
+| `query`, `library` | Question of 3–240 characters; any technology label of 1–80 characters |
 | `mode` | `live` or `recorded` (`recorded` is the illustrative fixture) |
 | `left_file`, `left_extra_file` | Required primary manifest and optional second manifest for A |
 | `right_file`, `right_extra_file` | Optional primary and second manifests for B |
@@ -231,12 +267,12 @@ The CI workflow checks backend tests and the frontend production build without a
 ## Limitations
 
 - Manifest declarations do not prove installed versions, active import namespaces, or runtime settings.
-- Four recognized API patterns in two libraries are covered; this is not broad framework compatibility analysis.
+- Any declared technology can be searched. Detailed recipe reasoning remains narrower than stack coverage; generic explicit requirements do not prove arbitrary code compatible.
 - SQLAlchemy recipe applicability depends on statement and transaction conditions as well as version.
 - A definitive verdict requires supported source evidence; insufficient or contradictory content remains uncertain.
 - Search and documentation may change. Bundled illustrative results are not live captures.
 - Witnesses establish the behavior of their exact trusted examples, not every retrieved answer or a user's repository.
-- Live integration and a public deployment remain unverified here.
+- Google retrieval and cache reuse were verified; general source inspection is blocked by this cloud's restrictive proxy. Optional Bing and a public deployment remain unverified here.
 
 ## Hackathon submission
 
@@ -249,5 +285,7 @@ The CI workflow checks backend tests and the frontend production build without a
 - **License:** not specified yet.
 
 Verify registration, eligibility, and required submission fields on the [official event site](https://serpapi.github.io/serpapi-india-hackathon-2026/). No prize outcome is implied.
+
+See [the source-backed catalogue and criteria audit](docs/competitive-audit.md) for implemented differentiators, outstanding submission work, and the distinction between prior-art catalogue projects and confirmed hackathon competitors.
 
 **VersionVerdict — The right answer for your version.**

@@ -13,10 +13,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
 from .applicability import RULESET_VERSION, classify_all, rank
-from .evidence import FIXTURE_ROOT, allowed, collect
+from .evidence import FIXTURE_ROOT, allowed, public_allowed, collect
+from .generic_applicability import GENERIC_RULESET_VERSION, classify_generic, rank_generic
 from .models import ProfileResult, SearchReceipt, SearchResponse
 from .planner import plan
-from .profiler import MAX_FILE_BYTES, parse_profile
+from .profiler import MAX_FILE_BYTES, SUPPORTED_FILES, parse_profile
 from .retrieval import SearchError, normalize, search_batch
 from .search_store import SearchStore
 
@@ -76,13 +77,16 @@ def capabilities():
             'scope': 'Application allocation; not the shared SerpApi account balance.',
         },
         'live_search_configured': bool(os.getenv('SERPAPI_KEY')),
-        'supported_libraries': ['pydantic', 'sqlalchemy'],
-        'supported_manifests': ['requirements.txt', 'pyproject.toml'],
+        'supported_libraries': [],
+        'reviewed_libraries': ['pydantic', 'sqlalchemy'],
+        'universal_search': True,
+        'supported_manifests': sorted(SUPPORTED_FILES),
         'max_manifest_bytes': MAX_FILE_BYTES,
         'default_search_calls': 2,
         'secondary_search_calls': 1,
         'cache_ttl_seconds': 86_400,
         'version_source': 'Declared dependencies; installed versions are not inferred.',
+        'generic_verdict_scope': 'Explicit query-specific named source version conditions; runtime/hardware/OS/ABI correctness is not inferred.',
     }
 
 
@@ -132,8 +136,15 @@ async def search(
         raise HTTPException(422, 'Query must contain 3 to 240 characters.')
     if mode not in {'live', 'recorded'}:
         raise HTTPException(422, 'Mode must be live or recorded.')
+    library = ' '.join(library.split()).strip()
+    if not 1 <= len(library) <= 80 or any(ord(char) < 32 or ord(char) == 127 for char in library):
+        raise HTTPException(422, 'Technology must contain 1 to 80 printable characters.')
+    if library.casefold() in {'pydantic', 'sqlalchemy'}:
+        library = library.casefold()
+    reviewed = library in {'pydantic', 'sqlalchemy'}
+    if mode == 'recorded' and not reviewed:
+        raise HTTPException(422, 'Illustrative fixtures are only available for Pydantic and SQLAlchemy. Other targets use live search.')
     try:
-        query_plan = plan(query, library, include_secondary=include_secondary)
         left = parse_profile(
             left_name,
             await _manifest_files(left_file, left_extra_file),
@@ -154,6 +165,7 @@ async def search(
             )
         elif right_extra_file is not None:
             raise ValueError('Version B needs its primary dependency file.')
+        query_plan = plan(query, library, include_secondary=include_secondary, profiles=profiles)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
 
@@ -161,7 +173,9 @@ async def search(
     receipt = SearchReceipt(**store.budget())
     queries = [spec.query for spec in query_plan]
     response_mode = mode
-    async with httpx.AsyncClient() as client:
+    # Generic evidence connects to validated IPs with original-host TLS SNI.
+    # HTTP/1.1 plus Connection: close prevents TLS-pool reuse across CDN hosts.
+    async with httpx.AsyncClient(http2=False) as client:
         if mode == 'live':
             key = os.getenv('SERPAPI_KEY')
             if not key:
@@ -203,10 +217,11 @@ async def search(
                     'Bing is available in live mode; this demo contains Google-shaped fixtures only.'
                 )
             queries = queries[: len(data['responses'])]
-        texts = await collect(hits, client, mode)
+        texts = await collect(hits, client, mode, universal=not reviewed)
 
     if mode == 'live':
-        eligible = sum(allowed(hit.url) for hit in hits)
+        source_gate = allowed if reviewed else public_allowed
+        eligible = sum(source_gate(hit.url) for hit in hits)
         if eligible > len(texts):
             warnings.append(
                 'Some documentation could not be fetched or exceeded the bounded fetch limit. '
@@ -214,16 +229,17 @@ async def search(
             )
         if not eligible:
             warnings.append(
-                'No fetched official-documentation evidence is available for these candidates.'
+                'No safely fetchable source-content evidence is available for these candidates.'
             )
     facts = json.loads((FIXTURE_ROOT / 'facts.json').read_text())
     results = [
         ProfileResult(
             profile=profile,
-            cards=rank([
+            cards=(rank if reviewed else lambda values: rank_generic(values, library, query))([
                 card
                 for hit in hits
-                for card in classify_all(hit, texts.get(hit.id), profile, library, facts)
+                for card in (classify_all(hit, texts.get(hit.id), profile, library, facts)
+                             if reviewed else [classify_generic(hit, texts.get(hit.id), profile, library, query)])
             ]),
         )
         for profile in profiles
@@ -239,7 +255,7 @@ async def search(
         warnings=warnings,
         receipt=receipt,
         pool_id=pool_id,
-        rule_version=RULESET_VERSION,
+        rule_version=RULESET_VERSION if reviewed else GENERIC_RULESET_VERSION,
     )
 
 

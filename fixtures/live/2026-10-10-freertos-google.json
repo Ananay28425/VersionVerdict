@@ -1,0 +1,663 @@
+{
+  "mode": "live",
+  "queries": [
+    "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+    "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+  ],
+  "candidate_count": 18,
+  "results": [
+    {
+      "profile": {
+        "name": "Project A",
+        "dependencies": [
+          {
+            "name": "freertos",
+            "constraint": "==11.1.0",
+            "exact": "11.1.0",
+            "source": "environment.json",
+            "ecosystem": "declared"
+          }
+        ],
+        "warnings": [],
+        "sqlalchemy_future": null,
+        "pydantic_api_mode": "unknown",
+        "technology": "FreeRTOS",
+        "language": "C",
+        "platform": "bare metal",
+        "hardware": "STM32F407",
+        "notes": null
+      },
+      "cards": [
+        {
+          "hit": {
+            "id": "607be7f6ba28af62",
+            "title": "FreeRTOS task stack memory saftey, direct task notificaiton",
+            "url": "https://forums.freertos.org/t/freertos-task-stack-memory-saftey-direct-task-notificaiton/12485",
+            "snippet": "Hi, I'm reading about the direct task notification, noted the content ulvalue is a 32-bit number. I am wondering, would it be possible to ...",
+            "position": 1,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 1,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 299,
+          "id": "607be7f6ba28af62",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "abff68f00c8b6842",
+            "title": "BARE Definition & Meaning",
+            "url": "https://www.merriam-webster.com/dictionary/bare",
+            "snippet": "The meaning of BARE is lacking a natural, usual, or appropriate covering. c : lacking any tool or weapon opened the box with his bare hands",
+            "position": 1,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 1,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 299,
+          "id": "abff68f00c8b6842",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "a7dfdf1f64c80b5f",
+            "title": "holepunchto/bare: Small and modular JavaScript runtime ...",
+            "url": "https://github.com/holepunchto/bare",
+            "snippet": "Notifications You must be signed in to change notification settings ... Bare can easily be embedded using the C API defined in include/bare.",
+            "position": 2,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 2,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 298,
+          "id": "a7dfdf1f64c80b5f",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "d3f582c534bda29e",
+            "title": "interTaskCommFreeRTOS",
+            "url": "https://gamma.app/docs/interTaskCommFreeRTOS-jcgdn0j0x8s0tsh",
+            "snippet": "Allows to pass more information between tasks (messages) Each Task has 32-bit following limitations: Used to notify only one Task at a time The Task waiting ...",
+            "position": 2,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 2,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 298,
+          "id": "d3f582c534bda29e",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "9c3d272676d7586d",
+            "title": "TaskNotification or Event groups",
+            "url": "https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2016/freertos_TaskNotification_or_Event_groups_9aa318c5j.html",
+            "snippet": "So I wonder if task notification mechanism or event groups can be used for this purpose or what is the most suitable/efficient mechanism for ...",
+            "position": 3,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 3,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 297,
+          "id": "9c3d272676d7586d",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "b0e97e554901efb7",
+            "title": "Home | Bare",
+            "url": "https://www.baresnacks.com/",
+            "snippet": "Our products start with real fruits and coconuts, baked to crunchy perfection. Made with no artificial colors, flavors, or preservatives. EXPLORE OUR PRODUCTS.",
+            "position": 3,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 3,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 297,
+          "id": "b0e97e554901efb7",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "7e6eb5f2f6969723",
+            "title": "Task Notification Problems - Kernel",
+            "url": "https://forums.freertos.org/t/task-notification-problems/11840",
+            "snippet": "I'm having trouble with task notifications and am sure it's something stupid that I'm missing. My environment is such: NXP LPC4330 NXP ...",
+            "position": 4,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 4,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 296,
+          "id": "7e6eb5f2f6969723",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "b5804fa5606f581f",
+            "title": "Natural evaporation from open water, bare soil and grass",
+            "url": "https://royalsocietypublishing.org/rspa/article/193/1032/120/6686/Natural-evaporation-from-open-water-bare-soil-and",
+            "snippet": "Evaporation rates from wet bare soil and from turf with an adequate supply of water. This content is only available via PDF.",
+            "position": 4,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 4,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 296,
+          "id": "b5804fa5606f581f",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "5e7d6abf2b34e3cd",
+            "title": "16. Porting from FreeRTOS",
+            "url": "https://cheriot.org/book/porting_from_freertos.html",
+            "snippet": "These allow you to port existing FreeRTOS code to CHERIoT RTOS with minimal changes. These are not complete, but are expected to evolve over time.",
+            "position": 5,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 5,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 295,
+          "id": "5e7d6abf2b34e3cd",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "e3ac0f4d31cd01a0",
+            "title": "Bare (@bare.bombay) \u2022 Instagram photos and videos",
+            "url": "https://www.instagram.com/bare.bombay/?hl=en",
+            "snippet": "Coffee | Art | Bar | Dining Lunch 12 - 3 pm. Drinks and Dinner 6pm - 1am. Mondays closed. Follow. Message. Saturday night. 11:30 onwards.",
+            "position": 5,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 5,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 295,
+          "id": "e3ac0f4d31cd01a0",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "9b9d517221ac6406",
+            "title": "FreeRTOS Task Synchronization Guide | PDF",
+            "url": "https://www.scribd.com/document/953099513/253-EEE-4523-Lecture-3",
+            "snippet": "Task Notifications are a fast and lightweight way for tasks to signal each other. \u2022 Each task in FreeRTOS has a built-in notification value ...",
+            "position": 6,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 6,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 294,
+          "id": "9b9d517221ac6406",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "e16b7badae320137",
+            "title": "What is Azure Kubernetes Service on bare metal? (preview)",
+            "url": "https://learn.microsoft.com/en-us/azure/aks-hybrid-edge/bare-metal/aks-bare-metal-overview",
+            "snippet": "Learn how Azure Kubernetes Service on bare metal runs Kubernetes directly on Azure Linux or Ubuntu hosts without a hypervisor.",
+            "position": 6,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 6,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 294,
+          "id": "e16b7badae320137",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "4fdcd32e5ab96678",
+            "title": "FreeRTOS-Kernel-Community-Supported-Ports - CCRH",
+            "url": "https://github.com/FreeRTOS/FreeRTOS-Kernel-Community-Supported-Ports/blob/main/CCRH/RH850_F1KM_S4/portasm.s",
+            "snippet": "Contribute to FreeRTOS/FreeRTOS-Kernel-Community-Supported-Ports development by creating an account on GitHub.",
+            "position": 7,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 7,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 293,
+          "id": "4fdcd32e5ab96678",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "fa07bd392aa82f2a",
+            "title": "What is bare metal programming and how to get started?",
+            "url": "https://www.reddit.com/r/embedded/comments/10o0udj/what_is_bare_metal_programming_and_how_to_get/",
+            "snippet": "What is bare metal programming what are some of the useful resources to learn and get started with it",
+            "position": 7,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 7,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 293,
+          "id": "fa07bd392aa82f2a",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "0be0c69cae2c712a",
+            "title": "Bare nails are my quiet rebellion",
+            "url": "https://hotmesser.substack.com/p/bare-nails-are-my-quiet-rebellion",
+            "snippet": "I've been thinking a lot about nails lately, which feels like a deeply unserious way to be spending my one wild and precious life.",
+            "position": 8,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 8,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 292,
+          "id": "0be0c69cae2c712a",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "b8558b92726dc498",
+            "title": "Latest topics - FreeRTOS Community Forums",
+            "url": "https://forums.freertos.org/latest?page=104",
+            "snippet": "The online home of the FreeRTOS community. Task Notification Libraries",
+            "position": 8,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 8,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 292,
+          "id": "b8558b92726dc498",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "4d18ea14d457b833",
+            "title": "The bare lymphocyte syndrome and the regulation of MHC ...",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/11244040/",
+            "snippet": "The bare lymphocyte syndrome (BLS) is a hereditary immunodeficiency resulting from the absence of major histocompatibility complex class II (MHCII) expression.",
+            "position": 9,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS C bare metal"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS C bare metal",
+                "position": 9,
+                "search_id": "6aca2a796f082bbc50d780d2",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 291,
+          "id": "4d18ea14d457b833",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        },
+        {
+          "hit": {
+            "id": "901caa08bc95bf62",
+            "title": "Free RTOS Task Notifications - #2 by hs2 - Kernel",
+            "url": "https://forums.freertos.org/t/free-rtos-task-notifications/16891/2",
+            "snippet": "Hello, This is my first time using Task notifications and I'm having some trouble getting it to work. Below is what I have set up.",
+            "position": 9,
+            "queries": [
+              "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration"
+            ],
+            "provenance": [
+              {
+                "engine": "google",
+                "query": "FreeRTOS task notification API requirements FreeRTOS \"11.1.0\" documentation compatibility migration",
+                "position": 9,
+                "search_id": "6aca2a7927c2b086a931c8e7",
+                "retrieval": "live"
+              }
+            ]
+          },
+          "label": "UNCERTAIN",
+          "explanation": "Source content could not be fetched safely; snippets cannot establish applicability.",
+          "recipe": null,
+          "evidence": [],
+          "score": 291,
+          "id": "901caa08bc95bf62",
+          "rule_id": null,
+          "boundary": null,
+          "preconditions": [
+            "A declared exact target version and an explicit named source version condition",
+            "Version condition only; runtime, hardware, OS, ABI and full solution correctness are not verified"
+          ],
+          "witness_id": null
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    "Some documentation could not be fetched or exceeded the bounded fetch limit. Unverified sources remain UNCERTAIN."
+  ],
+  "receipt": {
+    "engines": [
+      "google"
+    ],
+    "api_calls": 3,
+    "cache_hits": 0,
+    "budget_limit": 50,
+    "budget_used": 3,
+    "budget_remaining": 47,
+    "cache_ttl_seconds": 86400,
+    "quota_scope": "Application allocation; not the SerpApi account balance."
+  },
+  "pool_id": "bfc9e9b1228f1718",
+  "rule_version": "2026-10-10-explicit-conditions-v1"
+}
