@@ -3,13 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f8f8f5" />
+    <meta name="theme-color" content="#0c0e0b" />
     <meta name="description" content="Repository-aware developer search. Compare technical solutions against declared Python dependency versions and inspect the evidence behind every verdict." />
     <title>VersionVerdict — The right answer for your version.</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23242738'/%3E%3Ctext x='7' y='23' fill='%23fff' font-family='Georgia' font-size='25'%3Ev%3C/text%3E%3C/svg%3E" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23141a10'/%3E%3Ctext x='4' y='22' fill='%23b5df83' font-family='monospace' font-size='21'%3E%26gt;_%3C/text%3E%3C/svg%3E" />
+    <style>body{margin:0;background:#0c0e0b;color:#d9ded2}.boot-panel{max-width:640px;margin:15vh auto;padding:28px;font:13px/1.8 monospace}.boot-panel h1{color:#b5df83;font-size:25px}.boot-panel a{color:#b5df83}</style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="boot-panel" data-startup><h1>&gt;_ VersionVerdict</h1><p id="boot-status">Loading the version workspace…</p><p>If this message stays visible, reload the page or restart the service with <code>./scripts/start_preview.sh</code>.</p><noscript>JavaScript is required for the search workspace. Enable it and reload.</noscript></div></div>
+    <script>
+      function showStartupError() {
+        const message = document.getElementById('boot-status');
+        if (message) message.textContent = 'The interface assets could not load. Reload to fetch the current build.';
+      }
+      window.addEventListener('error', showStartupError, true);
+      window.addEventListener('unhandledrejection', showStartupError);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

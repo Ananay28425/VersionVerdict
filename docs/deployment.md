@@ -7,11 +7,12 @@ FastAPI serves both `/api/*` and the built React frontend. The application does 
 From the repository root, with dependencies installed:
 
 ```bash
-npm --prefix frontend run build
-PYTHONPATH=backend .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1
+./scripts/start_preview.sh
 ```
 
-Check the homepage, `/api/health`, `/docs`, and both illustrative comparison presets. For live verification, set `SERPAPI_KEY` on the backend before starting the service and inspect the response's actual retrieval provenance.
+The script rebuilds and serves the terminal interface and API on `0.0.0.0:3000` by default. It supports `PORT`, uses one Uvicorn worker, and makes no search request during startup. Check the homepage, `/api/health`, `/docs`, and both illustrative comparison presets. For live verification, set `SERPAPI_KEY` on the backend before starting the service and inspect the response's actual retrieval provenance.
+
+Binding to all interfaces enables a host to forward the service port; it does not publish a public URL. The cloud environment onboarding interface itself does not support embedded web previews. A separate frontend server is unnecessary for a production preview. For Vite development, the backend must run on port 3000 to match the configured API proxy.
 
 ## Container
 

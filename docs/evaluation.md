@@ -46,7 +46,9 @@ Cases cover native and shim namespaces, migration boundaries, future mode, nonli
 
 ## Application checks
 
-Final local checks: **132 backend tests passed; 2 explicitly opt-in live tests skipped** because no SerpApi key was configured. **TypeScript checks and the Vite production build passed**. **12 browser checks passed with zero console errors**, covering both illustrative demos, source evidence, recipe pairing, clipboard, witnesses, keyboard access, mobile layouts, and mocked failure states. See [browser verification](browser-verification.json) and [screenshots](screenshots/desktop.png). The GitHub workflow repeats backend/frontend checks without spending the shared search allowance.
+Final local checks: **134 backend tests passed; 2 explicitly opt-in live tests skipped** because no SerpApi key was configured. **TypeScript checks and the Vite production build passed**. **18 browser checks passed**, covering the terminal layout, actual manifest previews, both illustrative demos, source evidence, recipe pairing, clipboard, witnesses, keyboard shortcuts, mobile layouts, and mocked failures. Startup checks deliberately block the JavaScript bundle and disable JavaScript to confirm readable fallback instructions. API outage recovery is mocked explicitly. No unexpected browser errors occurred in the functional demo checks. See [browser verification](browser-verification.json) and [screenshots](screenshots/desktop.png). The GitHub workflow repeats backend/frontend checks without spending the shared search allowance.
+
+The combined service responds on port 3000 through both loopback and the container's network interface. The entry page uses `Cache-Control: no-cache`; missing asset paths return 404 rather than HTML. This verifies runtime readiness, not an embedded preview or public deployment.
 
 The application comparison must preserve the shared hit pool. One source can expose multiple recipe cards, so recipe-card count may exceed source count. Source quotes must support the exact recipe and version claim; a working URL alone is insufficient evidence.
 

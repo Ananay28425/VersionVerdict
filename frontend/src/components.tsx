@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import type { Card, Context, Group, Library, SearchResult, Verdict } from './types'
 import { verdictNames } from './types'
 
@@ -10,12 +10,21 @@ export function host(url: string) { try { return new URL(url).hostname.replace(/
 
 function FilePicker({ file, onChange, optional, title }: { file: File | null; onChange: (file: File | null) => void; optional?: boolean; title: string }) {
   const id = useId()
+  const [preview, setPreview] = useState<string[]>([])
+  useEffect(() => {
+    let active = true
+    setPreview([])
+    if (file && ['requirements.txt', 'pyproject.toml'].includes(file.name)) {
+      void file.slice(0, 4096).text().then(text => { if (active) setPreview(text.split(/\r?\n/).slice(0, 6)) }).catch(() => {})
+    }
+    return () => { active = false }
+  }, [file])
   return <div className="manifest-picker"><label className="file-picker" htmlFor={id}>
     <span className="file-symbol" aria-hidden="true">{file ? '{ }' : '+'}</span>
     <span><strong>{file?.name || title}</strong><small>{file ? `${Math.ceil(file.size / 1024) || 1} KB · declared dependencies` : optional ? 'Optional second manifest' : 'requirements.txt or pyproject.toml'}</small></span>
     <span className="file-action">{file ? 'Change' : 'Choose file'}</span>
     <input id={id} type="file" accept=".txt,.toml" onChange={event => onChange(event.target.files?.[0] || null)} aria-label={title} />
-  </label>{file && <button type="button" className="remove-file" onClick={() => onChange(null)} aria-label={`Remove ${title}`}>Remove</button>}</div>
+  </label>{preview.length > 0 && <div className="manifest-preview" aria-label={`${title} content preview`}>{preview.map((line, index) => <div key={index}><span aria-hidden="true">{index + 1}</span><code>{line || ' '}</code></div>)}<small>First 6 lines / preview only</small></div>}{file && <button type="button" className="remove-file" onClick={() => onChange(null)} aria-label={`Remove ${title}`}>Remove</button>}</div>
 }
 
 export function ContextPanel({ letter, value, onChange, library }: { letter: string; value: Context; onChange: (context: Context) => void; library: Library }) {
@@ -45,7 +54,7 @@ export function ResultCard({ card, index, onWitness }: { card: Card; index: numb
     if (!card.recipe) return
     try { await navigator.clipboard.writeText(sourceExample || card.recipe); setCopied(true); window.setTimeout(() => setCopied(false), 1800) } catch { setCopied(false) }
   }
-  return <article className="result-card">
+  return <article className={`result-card result-${card.label.toLowerCase()}`}>
     <div className="result-meta"><span className="rank">{String(index + 1).padStart(2, '0')}</span><VerdictBadge label={card.label} /><span className="source-host">{host(card.hit.url)}</span></div>
     <h4><a href={card.hit.url} target="_blank" rel="noopener noreferrer">{card.hit.title}<Arrow diagonal /></a></h4>
     <p className="result-explanation">{card.explanation}</p>
@@ -76,6 +85,7 @@ export function Results({ result, onWitness }: { result: SearchResult; onWitness
   const modeLabel = isIllustrative ? 'Illustrative demo · offline' : result.mode === 'cached' ? 'Cached search results' : result.mode === 'mixed' ? 'Live + cached search' : 'Live SerpApi retrieval'
   return <section className="results-section" id="results" aria-label="Search results"><div className="section-heading"><div><span className="eyebrow">THE VERDICT</span><h2>Same search. Your environment.</h2></div><span className={`mode-pill ${isIllustrative ? 'illustrative' : 'live'}`}><span aria-hidden="true" />{modeLabel}</span></div>
     <p className="results-description">{result.candidate_count} deduplicated candidate{result.candidate_count === 1 ? '' : 's'}{result.results.length === 2 ? ', evaluated against both projects.' : ', evaluated against your project.'} Exact versions are declared pins, not runtime observations.</p>
+    {(result.pool_id || result.rule_version) && <div className="result-trace">{result.pool_id && <span>shared source pool <code>{result.pool_id}</code></span>}{result.rule_version && <span>rules <code>{result.rule_version}</code></span>}</div>}
     {result.warnings.map((warning, index) => <p className="notice" key={index}>{warning}</p>)}
     {result.receipt && <div className="receipt"><div><span>Search engines</span><strong>{result.receipt.engines.length ? result.receipt.engines.map(engine => engine === 'google' ? 'SerpApi · Google' : engine === 'bing' ? 'SerpApi · Bing' : engine).join(' + ') : 'Offline fixture'}</strong></div><div><span>API calls this request</span><strong>{result.receipt.api_calls}</strong></div><div><span>Cached searches reused</span><strong>{result.receipt.cache_hits}</strong></div><div><span>App allowance left</span><strong>{result.receipt.budget_remaining} <small>/ {result.receipt.budget_limit}</small></strong></div><p>App allowance is a local guardrail. It does not report your account’s remaining SerpApi searches.</p></div>}
     <div className="results-controls"><div className="view-switch" aria-label="Result view"><button type="button" aria-pressed={view === 'sources'} onClick={() => setView('sources')}>Ranked sources</button><button type="button" aria-pressed={view === 'comparison'} onClick={() => setView('comparison')}>Version comparison</button></div><span>No confidence percentages. Inspect the evidence.</span></div>

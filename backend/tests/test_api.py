@@ -141,6 +141,39 @@ async def test_capabilities_and_verification_artifacts():
 
 
 @pytest.mark.asyncio
+async def test_frontend_documents_are_revalidated_and_assets_have_correct_types(tmp_path, monkeypatch):
+    dist = tmp_path / 'frontend' / 'dist'
+    (dist / 'assets').mkdir(parents=True)
+    (dist / 'index.html').write_text('<html>VersionVerdict</html>')
+    (dist / 'assets' / 'app-test.js').write_text('console.log("loaded")')
+    monkeypatch.setattr(main, 'ROOT', tmp_path)
+    async with CLIENT(transport=httpx.ASGITransport(app=main.app), base_url='http://test') as client:
+        for path in ['/', '/index.html', '/workspace']:
+            response = await client.get(path)
+            assert response.status_code == 200
+            assert response.headers['cache-control'] == 'no-cache'
+            assert response.headers['content-type'].startswith('text/html')
+        script = await client.get('/assets/app-test.js')
+        assert script.status_code == 200
+        assert 'javascript' in script.headers['content-type']
+        assert script.text == 'console.log("loaded")'
+
+
+@pytest.mark.asyncio
+async def test_missing_frontend_assets_do_not_receive_html_fallback(tmp_path, monkeypatch):
+    dist = tmp_path / 'frontend' / 'dist'
+    dist.mkdir(parents=True)
+    (dist / 'index.html').write_text('<html>VersionVerdict</html>')
+    monkeypatch.setattr(main, 'ROOT', tmp_path)
+    async with CLIENT(transport=httpx.ASGITransport(app=main.app), base_url='http://test') as client:
+        for path in ['/assets/stale-build.js', '/assets/missing', '/missing.css']:
+            response = await client.get(path)
+            assert response.status_code == 404
+            assert response.headers['content-type'].startswith('application/json')
+            assert 'Rebuild' in response.json()['detail']
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize('payload', [
     b'project = "not-a-table"',
     b'[project]\ndependencies = "pydantic==2.9.2"',

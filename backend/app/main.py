@@ -248,7 +248,10 @@ def frontend(path: str):
     dist = ROOT / 'frontend' / 'dist'
     requested = (dist / path).resolve()
     if dist.exists() and requested.is_relative_to(dist.resolve()) and requested.is_file():
-        return FileResponse(requested)
+        headers = {'Cache-Control': 'no-cache'} if requested.name == 'index.html' else {}
+        return FileResponse(requested, headers=headers)
+    if path.startswith('assets/') or path.rsplit('/', 1)[-1].count('.'):
+        raise HTTPException(404, 'Frontend asset not found. Rebuild the frontend and reload.')
     if (dist / 'index.html').exists():
-        return FileResponse(dist / 'index.html')
-    raise HTTPException(404, 'Frontend is not built. Run npm run dev in frontend.')
+        return FileResponse(dist / 'index.html', headers={'Cache-Control': 'no-cache'})
+    raise HTTPException(404, 'Frontend is not built. Run npm --prefix frontend run build from the repository root.')

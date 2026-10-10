@@ -2,24 +2,44 @@
   "status": "PASS",
   "checks": [
     "Unconfigured live search disabled; keyboard skip link receives focus",
+    "Terminal workbench uses dark palette and monospace; slash shortcut focuses query; API state visible",
     "Both engines labelled SerpApi; app quota distinguished from account quota",
+    "Uploaded manifest preview displays actual file content and declared version pins",
     "Real backend illustrative Pydantic response: four cards; rankings and verdicts change; zero search calls",
     "Copy source example copies actual authored recipe code, not the API identifier or migration prose",
     "Source quote + hash inspectable; exact pinned witness opens; Escape closes and restores focus",
-    "Pydantic matrix matches recipes across profiles and shows original search positions",
+    "Pydantic matrix matches recipes across profiles and shows original search positions; shared source pool and rule version match actual API response",
     "SQLAlchemy 1.4 legacy vs 2.0: engine API boundary and compatible connection recipe; no stale library results",
     "Evaluation artifact available with explicitly synthetic scope and 30 cases",
     "375px and 320px layouts have no document overflow; comparison table scrolls within its container",
     "Missing/unsupported manifests fail before any search request",
     "Mocked charged failure refreshes displayed app allowance; explicit error shown with no fabricated result",
-    "Mocked same-page two-recipe regression retains both comparison rows with correct independent verdict pairing"
+    "Mocked same-page two-recipe regression retains both comparison rows with correct independent verdict pairing",
+    "Mocked API outage shows recovery instructions; retry reconnects to actual backend",
+    "Deliberately blocked JavaScript bundle leaves readable startup failure instructions",
+    "JavaScript-disabled browser displays explicit startup instructions",
+    "Ctrl+Enter submits through normal validation and displays actual mocked request accounting"
   ],
   "console_errors": [],
   "external_search_calls": 0,
-  "mocked_api_search_requests": 1,
+  "mocked_api_search_requests": 2,
   "screenshots": [
     "docs/screenshots/desktop.png",
-    "docs/screenshots/mobile.png"
+    "docs/screenshots/mobile.png",
+    "docs/screenshots/comparison.png"
   ],
-  "scope": "Production Vite build served by the FastAPI service; actual backend illustrative demos plus explicitly mocked failure/multi-recipe inputs. No external SerpApi search calls; no claim of live integration."
+  "scope": "Production Vite build served by one FastAPI process on port 3000. Actual backend illustrative demos; explicitly mocked search failures, API outage, and multi-recipe input. Deliberately blocked bundle and JavaScript-disabled contexts exercise startup recovery. No live SerpApi search calls. No claim of embedded preview, public deployment, or live integration.",
+  "expected_failure_scenarios": [
+    "Mocked search HTTP503",
+    "Mocked API HTTP503",
+    "Aborted JavaScript bundle"
+  ],
+  "runtime_checks": {
+    "host": "0.0.0.0",
+    "port": 3000,
+    "loopback_http": 200,
+    "container_interface_http": 200,
+    "index_revalidated": true,
+    "missing_asset_http": 404
+  }
 }

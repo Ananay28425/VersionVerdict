@@ -12,12 +12,12 @@ VersionVerdict finds technical sources and checks a narrow set of recognized Pyt
 
 Demo video and public deployment URLs are not yet published.
 
-[Desktop screenshot](docs/screenshots/desktop.png) · [Mobile screenshot](docs/screenshots/mobile.png)
+[Desktop screenshot](docs/screenshots/desktop.png) · [Mobile screenshot](docs/screenshots/mobile.png) · [Version comparison](docs/screenshots/comparison.png)
 
 <details>
-<summary>View the tested Pydantic comparison</summary>
+<summary>View the terminal workspace</summary>
 
-![The tested Pydantic version comparison](docs/screenshots/desktop.png)
+![VersionVerdict terminal workspace](docs/screenshots/desktop.png)
 
 </details>
 
@@ -31,11 +31,11 @@ VersionVerdict separates search relevance from applicability. A good search posi
 
 - Reads `requirements.txt` and `pyproject.toml` safely, distinguishing exact declared pins from ranges and unresolved declarations.
 - Plans two Google searches: the developer's question and a bounded official-documentation query covering the migration boundary.
-- Optionally adds one Bing search for supplementary discovery, rather than silently falling back to another engine.
+- Optionally adds one SerpApi Bing Search request for supplementary discovery.
 - Normalizes and deduplicates candidates, then fetches allowlisted official documentation for evidence.
 - Extracts scoped recipe evidence and combines it with reviewed, pinned migration facts.
 - Classifies supported recipes conservatively and ranks a shared candidate set independently for each environment.
-- Shows dependency context, verdicts, explanations, inspectable source evidence, and retrieval provenance in a functional React comparison page.
+- Provides a terminal-style React workspace with manifest previews, command input, keyboard shortcuts, version comparisons, and inspectable evidence.
 - Uses a persistent SQLite cache and local request-attempt allocation to reduce repeated searches on a shared account.
 
 It does not execute uploaded repository code, generate fixes with an LLM, or infer installed dependencies from manifest declarations.
@@ -135,17 +135,22 @@ From the repository root:
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r backend/requirements-lock.txt
 npm --prefix frontend ci
-npm --prefix frontend run build
-PYTHONPATH=backend .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1
+./scripts/start_preview.sh
 ```
 
-Open <http://127.0.0.1:8000>. API documentation: <http://127.0.0.1:8000/docs>.
+The launcher builds the frontend and serves both the interface and API on **port 3000**, bound to `0.0.0.0` so a development host can forward the port. It makes no search requests at startup. Open <http://127.0.0.1:3000>. API documentation: <http://127.0.0.1:3000/docs>. Set `PORT` to change the combined service port.
 
-For frontend development, run the backend and, in another terminal:
+The cloud environment onboarding screen does not provide an embedded web preview. A running process there does not create a public deployment URL. Use a host's port-forwarding facility or the [deployment guide](docs/deployment.md); the committed screenshots show the tested interface.
+
+If the interface cannot load its JavaScript, the page displays startup instructions. If the backend is unavailable, the rendered workspace shows an API error and a retry action. Missing assets return 404 instead of an HTML response, and the entry page is revalidated after builds.
+
+For frontend development, keep the combined service on port 3000 and, in another terminal:
 
 ```bash
 npm --prefix frontend run dev
 ```
+
+Vite proxies `/api` to port 3000. Press `/` outside a form field to focus the question. `Ctrl+Enter` (or `Cmd+Enter`) submits through the same validation as the live-search button. Keyboard shortcuts do not bypass missing-key or manifest checks.
 
 ### Configure live mode
 

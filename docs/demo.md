@@ -4,7 +4,7 @@ The demo is a comparison of the same retrieved candidates under two declared dep
 
 ## Prepare once
 
-1. Follow the root README setup and run the application on port 8000.
+1. Follow the root README setup and run `./scripts/start_preview.sh` on port 3000. The same process serves the terminal interface and API.
 2. Run backend tests, the frontend build, `scripts/verify_versions.py`, and `scripts/evaluate.py`. Inspect the reports before citing their results.
 3. For a live recording, configure the backend key and run one Pydantic and one SQLAlchemy search. Keep the cache directory for the recording. Ordinary repeated searches reuse cached responses; refreshing spends additional requests.
 4. Confirm each result shows its actual provenance. Bundled illustrative data must remain labelled illustrative. A cached live result must remain labelled cached.
@@ -46,7 +46,7 @@ The root README has the complete install and run commands. For a teammate with P
 
 1. Clone or pull `Ananay28425/VersionVerdict`.
 2. Install the pinned backend requirements and run `npm --prefix frontend ci`.
-3. Build the frontend and start the single FastAPI process.
+3. Run `./scripts/start_preview.sh` to build the frontend and start the single FastAPI process.
 4. Use an illustrative preset first; it requires no account credentials and spends no SerpApi searches.
 5. Configure a live key only when needed. Keep one shared deployed application's persistent cache and request ledger rather than several independently budgeted deployments against the same account.
 
