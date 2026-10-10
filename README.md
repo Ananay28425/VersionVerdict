@@ -8,8 +8,6 @@ VersionVerdict searches technical sources against a declared software or hardwar
 
 **One question. Different dependency versions. Different verdicts.**
 
-Demo video and public deployment URLs are not yet published.
-
 ## The problem
 
 A technically correct answer can still be wrong for your project. For example, Pydantic V1 uses `parse_obj()` to validate dictionary data. Pydantic V2 introduces `model_validate()` and deprecates the older method. SQLAlchemy 1.4 retains legacy `Engine.execute()` behavior, while 2.0 removes that API.
@@ -265,14 +263,10 @@ The CI workflow checks backend tests and the frontend production build without a
 
 **Event:** SerpApi India Hackathon 2026 · **Track:** Open Innovation — Developer Tools
 
-- **Engines:** Google Search; optional Bing Search. Claim successful live usage only after explicitly testing it.
+- **Engines:** Google Search; optional Bing Search. 
 - **Contributor:** Ananay Srivastava ([Ananay28425](https://github.com/Ananay28425)).
 - **AI-assisted development:** Codex supported planning and implementation. Source-backed rules, automated tests, and recorded version witnesses provide the validation evidence.
-- **Video and deployment:** pending. Follow the [three-minute demo guide](docs/demo.md).
+- **Video and deployment:** Follow the [three-minute demo guide](https://www.youtube.com/watch?v=c6cLaC6NtF4).
 - **License:** not specified yet.
-
-Verify registration, eligibility, and required submission fields on the [official event site](https://serpapi.github.io/serpapi-india-hackathon-2026/). No prize outcome is implied.
-
-See [the source-backed catalogue and criteria audit](docs/competitive-audit.md) for implemented differentiators, outstanding submission work, and the distinction between prior-art catalogue projects and confirmed hackathon competitors.
 
 **VersionVerdict — The right answer for your version.**
