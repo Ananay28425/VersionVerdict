@@ -194,7 +194,10 @@ async def search_batch(
                     api_calls += 1
                     try:
                         response = await client.get(
-                            SERPAPI_URL, params={**params, 'api_key': key}, timeout=15
+                            SERPAPI_URL,
+                            params={**params, 'api_key': key},
+                            timeout=15,
+                            follow_redirects=False,
                         )
                         if response.status_code == 429:
                             raise SearchError('SerpApi quota or rate limit reached', status_code=429)

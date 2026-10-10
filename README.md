@@ -154,7 +154,7 @@ Vite proxies `/api` to port 3000. Press `/` outside a form field to focus the qu
 
 ### Configure live mode
 
-The application reads process environment variables; it does not automatically load `.env`. The template [.env.example](.env.example) documents the supported values. In Bash, enter the key privately before starting the backend:
+The application reads process environment variables; it does not automatically load `.env`. For this cloud workspace, add your key to the existing `SERPAPI_KEY` secret in the environment settings. For local Bash, enter the key privately before starting the backend:
 
 ```bash
 read -rsp 'SerpApi key: ' SERPAPI_KEY
@@ -164,7 +164,7 @@ export SERPAPI_REQUEST_BUDGET=50
 export VERSIONVERDICT_CACHE_DIR=.cache/versionverdict
 ```
 
-Restart the backend after changing its environment. Allow outbound HTTPS to `serpapi.com`, `docs.pydantic.dev`, `pydantic.dev`, and `docs.sqlalchemy.org`. Never put the key in a frontend `VITE_*` variable, log, or commit.
+Restart the backend after changing its environment. Allow outbound HTTPS to `serpapi.com`, `docs.pydantic.dev`, `pydantic.dev`, and `docs.sqlalchemy.org`. Never put the key in a frontend `VITE_*` variable, log, or commit. See [the API-key security boundary](docs/security.md) for exactly where it is sent and who must be trusted to run the backend.
 
 ### Use the comparison page
 

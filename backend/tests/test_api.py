@@ -69,14 +69,17 @@ async def test_independent_sqlalchemy_engine_modes():
 
 @pytest.mark.asyncio
 async def test_two_serpapi_engines_cache_across_profiles_and_refresh(monkeypatch):
-    monkeypatch.setenv('SERPAPI_KEY', 'test-only-secret')
+    secret = 'test-only-secret'
+    monkeypatch.setenv('SERPAPI_KEY', secret)
     calls = []
     documents = json.loads((ROOT / 'fixtures/evidence/documents.json').read_text())
     pydantic_urls = [url for url in documents if 'pydantic' in url]
 
     def handle(request):
         if request.url.host == 'serpapi.com':
+            assert request.url.scheme == 'https'
             assert request.url.path == '/search.json'
+            assert request.url.params.get('api_key') == secret
             engine = request.url.params['engine']
             assert engine in {'google', 'bing'}
             calls.append(engine)
@@ -97,6 +100,7 @@ async def test_two_serpapi_engines_cache_across_profiles_and_refresh(monkeypatch
     async with CLIENT(transport=httpx.ASGITransport(app=main.app), base_url='http://test') as client:
         fresh = await client.post('/api/search', data=request_data(mode='live', include_secondary='true'), files=manifests())
         assert fresh.status_code == 200, fresh.text
+        assert secret not in fresh.text and 'api_key=' not in fresh.text
         data = fresh.json()
         assert data['mode'] == 'live'
         assert data['receipt']['api_calls'] == 3
@@ -112,6 +116,7 @@ async def test_two_serpapi_engines_cache_across_profiles_and_refresh(monkeypatch
         assert replay['mode'] == 'cached'
         assert replay['receipt']['api_calls'] == 0
         assert replay['receipt']['cache_hits'] == 3
+        assert secret not in cached.text and 'api_key=' not in cached.text
         assert len(calls) == 3
         assert replay['pool_id'] == data['pool_id']
         assert [group['cards'][0]['recipe'] for group in replay['results']] == ['model_validate()', 'parse_obj()']
@@ -121,6 +126,12 @@ async def test_two_serpapi_engines_cache_across_profiles_and_refresh(monkeypatch
         assert refreshed.json()['receipt']['api_calls'] == 3
         assert refreshed.json()['receipt']['budget_used'] == 6
         assert len(calls) == 6
+        assert secret not in refreshed.text and 'api_key=' not in refreshed.text
+        capabilities = await client.get('/api/capabilities')
+        assert capabilities.json()['live_search_configured'] is True
+        assert secret not in capabilities.text and 'api_key=' not in capabilities.text
+
+    assert secret.encode() not in main.SearchStore().path.read_bytes()
 
 
 @pytest.mark.asyncio

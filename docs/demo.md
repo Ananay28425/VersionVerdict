@@ -33,6 +33,7 @@ Do not edit a failed live attempt into a successful claim. Use a labelled illust
 - **Deployment and video:** add the actual publicly accessible URLs after publication; none are implied by this document.
 - **AI assistance:** disclose Codex planning and coding assistance, and identify the tests, source review, and actual version witnesses used to validate the implementation.
 - **License:** currently unspecified. Choose and add a license before describing the repository as licensed for reuse.
+- **Key boundary:** [server-only SerpApi key handling](security.md); the public search endpoint has a 50-attempt local allocation and no visitor accounts.
 
 Suggested engine description, after both live integrations have been exercised:
 

@@ -209,6 +209,32 @@ async def test_provider_errors_never_leak_secrets_or_retry(tmp_path, status, bod
 
 
 @pytest.mark.asyncio
+async def test_serpapi_redirect_cannot_forward_credentials_to_another_host(tmp_path):
+    visited_hosts = []
+
+    def handler(request):
+        visited_hosts.append(request.url.host)
+        if request.url.host == 'serpapi.com':
+            assert request.url.scheme == 'https'
+            assert request.url.path == '/search.json'
+            assert request.url.params.get('api_key') == SECRET
+            return httpx.Response(
+                302,
+                headers={'location': f'https://untrusted.example/collect?api_key={SECRET}'},
+            )
+        return httpx.Response(200, json={'status': 'unexpected redirect follow'})
+
+    allocation = store(tmp_path)
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler), follow_redirects=True) as client:
+        with pytest.raises(SearchError) as error:
+            await search_batch([QuerySpec('google', 'question')], SECRET, client, store=allocation)
+
+    assert visited_hosts == ['serpapi.com']
+    assert SECRET not in str(error.value)
+    assert allocation.get(cache_key(search_params(QuerySpec('google', 'question')))) is None
+
+
+@pytest.mark.asyncio
 async def test_transient_retry_counts_each_attempt(tmp_path):
     calls = []
     def handler(request):
