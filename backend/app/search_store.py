@@ -4,15 +4,14 @@ The allocation is not SerpApi account balance. Every reserved HTTP attempt,
 including failed attempts and retries, stays counted across process restarts.
 """
 
-from contextlib import contextmanager
 import hashlib
 import json
 import os
-from pathlib import Path
 import sqlite3
 import time
+from contextlib import contextmanager
+from pathlib import Path
 from typing import Callable
-
 
 CACHE_TTL_SECONDS = 24 * 60 * 60
 DEFAULT_REQUEST_BUDGET = 50
@@ -43,11 +42,17 @@ class SearchStore:
         self.path = Path(path) if path is not None else cache_dir / 'search.sqlite3'
         self.path = self.path.resolve()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        configured_limit = os.getenv('SERPAPI_REQUEST_BUDGET', str(DEFAULT_REQUEST_BUDGET))
+        configured_limit = os.getenv(
+            'SERPAPI_REQUEST_BUDGET', str(DEFAULT_REQUEST_BUDGET)
+        )
         try:
-            self.budget_limit = int(configured_limit) if budget_limit is None else int(budget_limit)
+            self.budget_limit = (
+                int(configured_limit) if budget_limit is None else int(budget_limit)
+            )
         except ValueError as exc:
-            raise ValueError('SERPAPI_REQUEST_BUDGET must be a positive integer') from exc
+            raise ValueError(
+                'SERPAPI_REQUEST_BUDGET must be a positive integer'
+            ) from exc
         if self.budget_limit < 1 or ttl_seconds < 1:
             raise ValueError('Search budget and cache TTL must be positive')
         self.ttl_seconds = ttl_seconds
@@ -75,7 +80,9 @@ class SearchStore:
 
     def budget(self) -> dict[str, int]:
         with self._connect() as connection:
-            used = connection.execute('SELECT attempts FROM search_allocation WHERE id=1').fetchone()[0]
+            used = connection.execute(
+                'SELECT attempts FROM search_allocation WHERE id=1'
+            ).fetchone()[0]
         return {
             'budget_limit': self.budget_limit,
             'budget_used': used,
@@ -85,10 +92,16 @@ class SearchStore:
     def reserve(self) -> None:
         with self._connect() as connection:
             connection.execute('BEGIN IMMEDIATE')
-            used = connection.execute('SELECT attempts FROM search_allocation WHERE id=1').fetchone()[0]
+            used = connection.execute(
+                'SELECT attempts FROM search_allocation WHERE id=1'
+            ).fetchone()[0]
             if used >= self.budget_limit:
-                raise BudgetExhausted('VersionVerdict application search allocation exhausted')
-            connection.execute('UPDATE search_allocation SET attempts=attempts+1 WHERE id=1')
+                raise BudgetExhausted(
+                    'VersionVerdict application search allocation exhausted'
+                )
+            connection.execute(
+                'UPDATE search_allocation SET attempts=attempts+1 WHERE id=1'
+            )
 
     def get(self, key: str) -> dict | None:
         with self._connect() as connection:

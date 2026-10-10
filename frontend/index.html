@@ -1,30 +1,76 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ECEAE5" />
-    <meta name="description" content="Repository-aware developer search. Compare technical solutions against declared software and hardware context and inspect the evidence behind every verdict." />
-    <title>VersionVerdict — The right answer for your version.</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23FFD23F'/%3E%3Ctext x='4' y='22' fill='%23232327' font-family='monospace' font-size='21'%3E%26gt;_%3C/text%3E%3C/svg%3E" />
-    <script>
-      try {
-        const theme = localStorage.getItem('versionverdict.theme');
-        if (['pop', 'vibrant', 'industrial', 'retro'].includes(theme)) document.documentElement.dataset.theme = theme;
-      } catch { /* Browser storage is optional. */ }
-    </script>
-    <style>body{margin:0;background:#ECEAE5;color:#232327}html[data-theme="industrial"] body{background:#171719;color:#F0F0F2}.boot-panel{max-width:640px;margin:15vh auto;padding:28px;font:13px/1.8 monospace}.boot-panel h1{font-size:25px}.boot-panel a{color:inherit}</style>
-  </head>
-  <body>
-    <div id="root"><div class="boot-panel" data-startup><h1>&gt;_ VersionVerdict</h1><p id="boot-status">Loading the version workspace…</p><p>If this message stays visible, reload the page or check that the frontend server is running.</p><noscript>JavaScript is required for the search workspace. Enable it and reload.</noscript></div></div>
-    <script>
-      function showStartupError() {
-        const message = document.getElementById('boot-status');
-        if (message) message.textContent = 'The interface assets could not load. Reload to fetch the current build.';
-      }
-      window.addEventListener('error', showStartupError, true);
-      window.addEventListener('unhandledrejection', showStartupError);
-    </script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#ECEAE5" />
+        <meta
+            name="description"
+            content="Repository-aware developer search. Compare technical solutions against declared software and hardware context and inspect the evidence behind every verdict."
+        />
+        <title>VersionVerdict — The right answer for your version.</title>
+        <link
+            rel="icon"
+            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23FFD23F'/%3E%3Ctext x='4' y='22' fill='%23232327' font-family='monospace' font-size='21'%3E%26gt;_%3C/text%3E%3C/svg%3E"
+        />
+        <script>
+            try {
+                const theme = localStorage.getItem("versionverdict.theme");
+                if (["pop", "vibrant", "industrial", "retro"].includes(theme))
+                    document.documentElement.dataset.theme = theme;
+            } catch {
+                /* Browser storage is optional. */
+            }
+        </script>
+        <style>
+            body {
+                margin: 0;
+                background: #eceae5;
+                color: #232327;
+            }
+            html[data-theme="industrial"] body {
+                background: #171719;
+                color: #f0f0f2;
+            }
+            .boot-panel {
+                max-width: 640px;
+                margin: 15vh auto;
+                padding: 28px;
+                font: 13px/1.8 monospace;
+            }
+            .boot-panel h1 {
+                font-size: 25px;
+            }
+            .boot-panel a {
+                color: inherit;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root">
+            <div class="boot-panel" data-startup>
+                <h1>&gt;_ VersionVerdict</h1>
+                <p id="boot-status">Loading the version workspace…</p>
+                <p>
+                    If this message stays visible, reload the page or check that
+                    the frontend server is running.
+                </p>
+                <noscript
+                    >JavaScript is required for the search workspace. Enable it
+                    and reload.</noscript
+                >
+            </div>
+        </div>
+        <script>
+            function showStartupError() {
+                const message = document.getElementById("boot-status");
+                if (message)
+                    message.textContent =
+                        "The interface assets could not load. Reload to fetch the current build.";
+            }
+            window.addEventListener("error", showStartupError, true);
+            window.addEventListener("unhandledrejection", showStartupError);
+        </script>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
 </html>

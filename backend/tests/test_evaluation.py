@@ -1,4 +1,5 @@
 """Regression scenarios and integrity checks for published evaluation/witness artifacts."""
+
 import hashlib
 import importlib.util
 import json
@@ -7,7 +8,9 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = importlib.util.spec_from_file_location('versionverdict_evaluation', ROOT / 'scripts/evaluate.py')
+SPEC = importlib.util.spec_from_file_location(
+    'versionverdict_evaluation', ROOT / 'scripts/evaluate.py'
+)
 EVALUATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(EVALUATOR)
 CASES_PATH = ROOT / 'fixtures/evaluation/cases.json'
@@ -51,7 +54,9 @@ def test_published_witnesses_preserve_actual_output_and_authored_code():
     assert len(records) == len(declared)
     assert set(records) == {case['id'] for case in declared}
     assert report['summary']['total'] == len(declared)
-    assert report['summary']['pass'] == sum(case['status'] == 'PASS' for case in records.values())
+    assert report['summary']['pass'] == sum(
+        case['status'] == 'PASS' for case in records.values()
+    )
     for case in declared:
         record = records[case['id']]
         source = (directory / 'authored' / case['snippet']).read_text()
@@ -63,7 +68,10 @@ def test_published_witnesses_preserve_actual_output_and_authored_code():
             assert record['execution']['returncode'] == 0
             assert '-I' in record['execution']['command']
             assert json.loads(record['execution']['stdout']) == record['observed']
-            assert all(record['observed'].get(key) == value for key, value in case['expected'].items())
+            assert all(
+                record['observed'].get(key) == value
+                for key, value in case['expected'].items()
+            )
         elif record['status'] == 'UNVERIFIED':
             assert record['observed'] is None
     assert 'No uploaded or retrieved code' in report['scope']

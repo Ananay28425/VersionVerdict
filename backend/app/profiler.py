@@ -1,6 +1,6 @@
-import re
-import json
 import configparser
+import json
+import re
 from pathlib import Path
 
 import tomllib
@@ -11,8 +11,15 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_valida
 from .models import Dependency, Profile
 
 MAX_FILE_BYTES = 256 * 1024
-SUPPORTED_FILES = {'requirements.txt', 'pyproject.toml', 'package.json', 'Cargo.toml',
-                   'go.mod', 'platformio.ini', 'environment.json'}
+SUPPORTED_FILES = {
+    'requirements.txt',
+    'pyproject.toml',
+    'package.json',
+    'Cargo.toml',
+    'go.mod',
+    'platformio.ini',
+    'environment.json',
+}
 MAX_DEPENDENCIES = 200
 
 
@@ -35,12 +42,15 @@ class DeclaredDependency(BaseModel):
 
 class DeclaredEnvironment(BaseModel):
     """Portable user declarations. No dependency resolution or code execution."""
+
     model_config = ConfigDict(extra='forbid')
     technology: str = Field(min_length=1, max_length=80)
     language: str | None = Field(default=None, max_length=120)
     platform: str | None = Field(default=None, max_length=120)
     hardware: str | None = Field(default=None, max_length=120)
-    dependencies: list[DeclaredDependency] = Field(default_factory=list, max_length=MAX_DEPENDENCIES)
+    dependencies: list[DeclaredDependency] = Field(
+        default_factory=list, max_length=MAX_DEPENDENCIES
+    )
     notes: str | None = Field(default=None, max_length=1000)
 
 
@@ -48,14 +58,30 @@ def target_name(value: str) -> str:
     return canonicalize_name(value.strip()).casefold()
 
 
-def _declared(profile: Profile, name: str, value: object, source: str, ecosystem: str,
-              *, exact: str | None = None):
+def _declared(
+    profile: Profile,
+    name: str,
+    value: object,
+    source: str,
+    ecosystem: str,
+    *,
+    exact: str | None = None,
+):
     if not isinstance(name, str) or not name.strip() or len(name) > 100:
         raise ValueError(f'{source}: dependency name must contain 1 to 100 characters')
     if not isinstance(value, str) or len(value) > 200:
-        raise ValueError(f'{source}: dependency declaration must be a string of at most 200 characters')
-    profile.dependencies.append(Dependency(name=target_name(name), constraint=value or 'unknown',
-                                           exact=exact, source=source, ecosystem=ecosystem))
+        raise ValueError(
+            f'{source}: dependency declaration must be a string of at most 200 characters'
+        )
+    profile.dependencies.append(
+        Dependency(
+            name=target_name(name),
+            constraint=value or 'unknown',
+            exact=exact,
+            source=source,
+            ecosystem=ecosystem,
+        )
+    )
 
 
 def _generic_manifest(filename: str, content: str, profile: Profile):
@@ -63,14 +89,22 @@ def _generic_manifest(filename: str, content: str, profile: Profile):
         try:
             context = DeclaredEnvironment.model_validate_json(content)
         except ValidationError as exc:
-            raise ValueError('Invalid environment.json: expected technology, optional context strings, and dependencies with name plus version or constraint') from exc
+            raise ValueError(
+                'Invalid environment.json: expected technology, optional context strings, and dependencies with name plus version or constraint'
+            ) from exc
         if not context.technology.strip():
             raise ValueError('environment.json technology cannot be blank')
         for field in ('technology', 'language', 'platform', 'hardware', 'notes'):
             setattr(profile, field, getattr(context, field))
         for dep in context.dependencies:
-            _declared(profile, dep.name, '==' + dep.version if dep.version else dep.constraint or 'unknown',
-                      filename, 'declared', exact=dep.version)
+            _declared(
+                profile,
+                dep.name,
+                '==' + dep.version if dep.version else dep.constraint or 'unknown',
+                filename,
+                'declared',
+                exact=dep.version,
+            )
     elif filename == 'package.json':
         try:
             data = json.loads(content)
@@ -80,25 +114,46 @@ def _generic_manifest(filename: str, content: str, profile: Profile):
             raise ValueError('package.json must be an object')
         profile.language = profile.language or 'JavaScript / TypeScript'
         profile.platform = profile.platform or 'Node.js'
-        for group in ('dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies'):
+        for group in (
+            'dependencies',
+            'devDependencies',
+            'peerDependencies',
+            'optionalDependencies',
+        ):
             deps = data.get(group, {})
             if not isinstance(deps, dict):
                 raise ValueError(f'package.json {group} must be an object')
             for pkg, spec in deps.items():
-                exact = spec if isinstance(spec, str) and re.fullmatch(r'\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?', spec) else None
+                exact = (
+                    spec
+                    if isinstance(spec, str)
+                    and re.fullmatch(
+                        r'\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?', spec
+                    )
+                    else None
+                )
                 _declared(profile, pkg, spec, f'{filename}:{group}', 'npm', exact=exact)
         engines = data.get('engines', {})
         if isinstance(engines, dict) and isinstance(engines.get('node'), str):
             spec = engines['node']
-            _declared(profile, 'node', spec, f'{filename}:engines', 'npm',
-                      exact=spec if re.fullmatch(r'\d+\.\d+\.\d+', spec) else None)
+            _declared(
+                profile,
+                'node',
+                spec,
+                f'{filename}:engines',
+                'npm',
+                exact=spec if re.fullmatch(r'\d+\.\d+\.\d+', spec) else None,
+            )
     elif filename == 'Cargo.toml':
         try:
             data = tomllib.loads(content)
         except tomllib.TOMLDecodeError as exc:
             raise ValueError('Invalid Cargo.toml') from exc
         profile.language = profile.language or 'Rust'
-        tables = [(group, data.get(group, {})) for group in ('dependencies', 'dev-dependencies', 'build-dependencies')]
+        tables = [
+            (group, data.get(group, {}))
+            for group in ('dependencies', 'dev-dependencies', 'build-dependencies')
+        ]
         targets = data.get('target', {})
         if not isinstance(targets, dict):
             raise ValueError('Cargo.toml target must be a table')
@@ -114,17 +169,31 @@ def _generic_manifest(filename: str, content: str, profile: Profile):
                 conditional = group.startswith('target.')
                 if isinstance(spec, dict):
                     name = spec.get('package', pkg)
-                    value = spec.get('version', 'unknown (path/git/workspace dependency)')
+                    value = spec.get(
+                        'version', 'unknown (path/git/workspace dependency)'
+                    )
                     conditional = conditional or spec.get('optional', False)
                     if any(key in spec for key in ('git', 'path', 'workspace')):
                         conditional = True
-                        profile.warnings.append(f'{name}: custom source or workspace dependency version is unresolved')
+                        profile.warnings.append(
+                            f'{name}: custom source or workspace dependency version is unresolved'
+                        )
                 else:
                     name, value = pkg, spec
-                exact = value[1:].strip() if isinstance(value, str) and re.fullmatch(r'=\s*\d+\.\d+\.\d+', value) and not conditional else None
-                _declared(profile, name, value, f'{filename}:{group}', 'cargo', exact=exact)
+                exact = (
+                    value[1:].strip()
+                    if isinstance(value, str)
+                    and re.fullmatch(r'=\s*\d+\.\d+\.\d+', value)
+                    and not conditional
+                    else None
+                )
+                _declared(
+                    profile, name, value, f'{filename}:{group}', 'cargo', exact=exact
+                )
                 if conditional:
-                    profile.warnings.append(f'{name}: target or feature conditional; applicability needs build context')
+                    profile.warnings.append(
+                        f'{name}: target or feature conditional; applicability needs build context'
+                    )
     elif filename == 'go.mod':
         profile.language = profile.language or 'Go'
         in_require = False
@@ -137,16 +206,29 @@ def _generic_manifest(filename: str, content: str, profile: Profile):
                 in_require = False
                 continue
             if line.startswith(('replace ', 'exclude ', 'retract ')):
-                profile.warnings.append('go.mod replace/exclude/retract directives need module resolution; declarations are not installed versions')
+                profile.warnings.append(
+                    'go.mod replace/exclude/retract directives need module resolution; declarations are not installed versions'
+                )
             if line.startswith('go '):
-                _declared(profile, 'go', '>=' + line[3:].strip(), f'{filename}:{number}', 'go')
+                _declared(
+                    profile, 'go', '>=' + line[3:].strip(), f'{filename}:{number}', 'go'
+                )
             elif line.startswith('require ') or in_require:
                 parts = (line[8:] if line.startswith('require ') else line).split()
                 if not parts:
                     continue
-                if len(parts) != 2 or not re.fullmatch(r'v\d+\.\d+\.\d+(?:[-+][\w.-]+)?', parts[1]):
+                if len(parts) != 2 or not re.fullmatch(
+                    r'v\d+\.\d+\.\d+(?:[-+][\w.-]+)?', parts[1]
+                ):
                     raise ValueError('Unsupported go.mod require declaration')
-                _declared(profile, parts[0], parts[1], f'{filename}:{number}', 'go', exact=parts[1][1:])
+                _declared(
+                    profile,
+                    parts[0],
+                    parts[1],
+                    f'{filename}:{number}',
+                    'go',
+                    exact=parts[1][1:],
+                )
         if any('module resolution' in warning for warning in profile.warnings):
             for dep in profile.dependencies:
                 if dep.ecosystem == 'go':
@@ -158,9 +240,13 @@ def _generic_manifest(filename: str, content: str, profile: Profile):
         except configparser.Error as exc:
             raise ValueError('Invalid platformio.ini') from exc
         profile.language = profile.language or 'C / C++'
-        environments = [section for section in parser.sections() if section.startswith('env:')]
+        environments = [
+            section for section in parser.sections() if section.startswith('env:')
+        ]
         if len(environments) > 1:
-            profile.warnings.append('Multiple PlatformIO environments; declare the active environment in environment.json to resolve context')
+            profile.warnings.append(
+                'Multiple PlatformIO environments; declare the active environment in environment.json to resolve context'
+            )
         for section in environments:
             values = parser[section]
             if len(environments) == 1:
@@ -168,15 +254,30 @@ def _generic_manifest(filename: str, content: str, profile: Profile):
                 profile.hardware = values.get('board')
                 profile.technology = values.get('framework') or profile.technology
             declarations = [('platform', values.get('platform', ''))]
-            declarations += [('lib_deps', line.strip()) for line in values.get('lib_deps', '').splitlines() if line.strip()]
+            declarations += [
+                ('lib_deps', line.strip())
+                for line in values.get('lib_deps', '').splitlines()
+                if line.strip()
+            ]
             for group, declaration in declarations:
                 if not declaration:
                     continue
                 pkg, separator, spec = declaration.rpartition('@')
                 if not separator:
                     pkg, spec = declaration, 'unknown'
-                exact = spec if len(environments) == 1 and re.fullmatch(r'\d+\.\d+\.\d+', spec) else None
-                _declared(profile, pkg, spec, f'{filename}:{section}:{group}', 'platformio', exact=exact)
+                exact = (
+                    spec
+                    if len(environments) == 1 and re.fullmatch(r'\d+\.\d+\.\d+', spec)
+                    else None
+                )
+                _declared(
+                    profile,
+                    pkg,
+                    spec,
+                    f'{filename}:{section}:{group}',
+                    'platformio',
+                    exact=exact,
+                )
 
 
 def _add(text: str, source: str, profile: Profile):
@@ -190,7 +291,11 @@ def _add(text: str, source: str, profile: Profile):
             f'{source}: direct URL dependency {req.name} has unknown version'
         )
         profile.dependencies.append(
-            Dependency(name=canonicalize_name(req.name), constraint='direct URL (unresolved)', source=source)
+            Dependency(
+                name=canonicalize_name(req.name),
+                constraint='direct URL (unresolved)',
+                source=source,
+            )
         )
         return
     if req.marker:
@@ -239,7 +344,9 @@ def parse_profile(
     for filename, body in files:
         filename = Path(filename).name
         if filename not in SUPPORTED_FILES:
-            raise ValueError('Unsupported manifest. Use ' + ', '.join(sorted(SUPPORTED_FILES)))
+            raise ValueError(
+                'Unsupported manifest. Use ' + ', '.join(sorted(SUPPORTED_FILES))
+            )
         try:
             content = body.decode('utf-8-sig')
         except UnicodeDecodeError as exc:
@@ -277,17 +384,25 @@ def parse_profile(
             if not isinstance(project, dict):
                 raise ValueError('pyproject.toml project must be a table')
             dynamic = project.get('dynamic', [])
-            if not isinstance(dynamic, list) or not all(isinstance(item, str) for item in dynamic):
+            if not isinstance(dynamic, list) or not all(
+                isinstance(item, str) for item in dynamic
+            ):
                 raise ValueError('project.dynamic must be a list of field names')
             if 'dependencies' in dynamic:
                 profile.warnings.append(
                     'Dynamic project dependencies cannot be resolved'
                 )
             dependencies = project.get('dependencies', [])
-            if not isinstance(dependencies, list) or not all(isinstance(item, str) for item in dependencies):
-                raise ValueError('project.dependencies must be a list of requirement strings')
+            if not isinstance(dependencies, list) or not all(
+                isinstance(item, str) for item in dependencies
+            ):
+                raise ValueError(
+                    'project.dependencies must be a list of requirement strings'
+                )
             if dependencies and 'dependencies' in dynamic:
-                raise ValueError('project.dependencies cannot be both dynamic and statically declared')
+                raise ValueError(
+                    'project.dependencies cannot be both dynamic and statically declared'
+                )
             for item in dependencies:
                 _add(item, filename, profile)
             tool = data.get('tool', {})
@@ -321,7 +436,9 @@ def parse_profile(
                     )
                     _add(pkg, filename, profile)
     if len(profile.dependencies) > MAX_DEPENDENCIES:
-        raise ValueError(f'At most {MAX_DEPENDENCIES} dependency declarations are allowed')
+        raise ValueError(
+            f'At most {MAX_DEPENDENCIES} dependency declarations are allowed'
+        )
     by_name: dict[str, list[Dependency]] = {}
     for dep in profile.dependencies:
         by_name.setdefault(dep.name, []).append(dep)
@@ -334,5 +451,7 @@ def parse_profile(
 
 
 def version_for(profile: Profile, package: str) -> str | None:
-    matches = [d for d in profile.dependencies if target_name(d.name) == target_name(package)]
+    matches = [
+        d for d in profile.dependencies if target_name(d.name) == target_name(package)
+    ]
     return matches[0].exact if len(matches) == 1 else None

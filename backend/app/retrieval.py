@@ -1,18 +1,17 @@
 """SerpApi Google/Bing discovery with explicit provenance and request accounting."""
 
 import asyncio
-from dataclasses import dataclass
 import hashlib
 import re
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import weakref
+from dataclasses import dataclass
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import httpx
 
 from .models import SearchHit, SearchProvenance
 from .planner import QuerySpec
 from .search_store import BudgetExhausted, SearchStore, cache_key
-
 
 SERPAPI_URL = 'https://serpapi.com/search.json'
 SUPPORTED_ENGINES = {'google', 'bing'}
@@ -21,7 +20,9 @@ _loop_semaphores: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
 
 
 class SearchError(Exception):
-    def __init__(self, message: str, *, receipt: dict | None = None, status_code: int = 502):
+    def __init__(
+        self, message: str, *, receipt: dict | None = None, status_code: int = 502
+    ):
         super().__init__(message)
         self.receipt = receipt
         self.status_code = status_code
@@ -46,7 +47,15 @@ def canonical_url(url: str) -> str:
             for key, value in parse_qsl(parsed.query)
             if not key.lower().startswith(('utm_', 'fbclid', 'gclid', 'api_key'))
         ]
-        return urlunsplit(('https', parsed.hostname.lower(), parsed.path or '/', urlencode(params), ''))
+        return urlunsplit(
+            (
+                'https',
+                parsed.hostname.lower(),
+                parsed.path or '/',
+                urlencode(params),
+                '',
+            )
+        )
     except ValueError:
         return ''
 
@@ -122,6 +131,7 @@ def search_params(spec: QuerySpec) -> dict[str, str]:
 
 def _safe_payload(payload: dict, secret: str) -> dict:
     """Persist a minimal response, excluding search_parameters and provider URLs."""
+
     def clean(value: object, limit: int) -> str:
         text = str(value or '')
         if secret:
@@ -132,7 +142,9 @@ def _safe_payload(payload: dict, secret: str) -> dict:
     metadata = payload.get('search_metadata', {})
     results = payload.get('organic_results', [])
     return {
-        'search_metadata': {'id': clean(metadata.get('id'), 100) if isinstance(metadata, dict) else ''},
+        'search_metadata': {
+            'id': clean(metadata.get('id'), 100) if isinstance(metadata, dict) else ''
+        },
         'organic_results': [
             {
                 'link': clean(item.get('link'), 4000),
@@ -150,9 +162,21 @@ def _provider_error(payload: dict) -> SearchError:
     # Provider strings can echo request URLs, API keys, or user input. Classify
     # locally and expose fixed text instead of passing their contents through.
     error = str(payload.get('error', '')).casefold()
-    if any(word in error for word in ('quota', 'rate limit', 'run out', 'searches left', 'credits')):
+    if any(
+        word in error
+        for word in ('quota', 'rate limit', 'run out', 'searches left', 'credits')
+    ):
         return SearchError('SerpApi quota or rate limit reached', status_code=429)
-    if any(word in error for word in ('api key', 'api_key', 'authentication', 'unauthorized', 'access denied')):
+    if any(
+        word in error
+        for word in (
+            'api key',
+            'api_key',
+            'authentication',
+            'unauthorized',
+            'access denied',
+        )
+    ):
         return SearchError('SerpApi authentication or access failed', status_code=503)
     return SearchError('SerpApi returned an unsuccessful search response')
 
@@ -184,7 +208,9 @@ async def search_batch(
                     cache_hits += 1
                     return cached, 'cached'
             if not key:
-                raise SearchError('Live SerpApi search needs a backend API key', status_code=503)
+                raise SearchError(
+                    'Live SerpApi search needs a backend API key', status_code=503
+                )
             async with semaphore:
                 for attempt in range(2):
                     try:
@@ -200,24 +226,40 @@ async def search_batch(
                             follow_redirects=False,
                         )
                         if response.status_code == 429:
-                            raise SearchError('SerpApi quota or rate limit reached', status_code=429)
+                            raise SearchError(
+                                'SerpApi quota or rate limit reached', status_code=429
+                            )
                         if response.status_code in {401, 403}:
-                            raise SearchError('SerpApi authentication or access failed', status_code=503)
+                            raise SearchError(
+                                'SerpApi authentication or access failed',
+                                status_code=503,
+                            )
                         if response.status_code >= 500 and attempt == 0:
                             await asyncio.sleep(0.4)
                             continue
                         if response.status_code >= 400:
-                            raise SearchError(f'SerpApi HTTP response failed ({response.status_code})')
+                            raise SearchError(
+                                f'SerpApi HTTP response failed ({response.status_code})'
+                            )
                         payload = response.json()
                         if not isinstance(payload, dict):
-                            raise SearchError('SerpApi returned an invalid JSON response')
+                            raise SearchError(
+                                'SerpApi returned an invalid JSON response'
+                            )
                         if payload.get('error'):
                             raise _provider_error(payload)
                         metadata = payload.get('search_metadata', {})
-                        if isinstance(metadata, dict) and metadata.get('status') in {'Error', 'Processing'}:
-                            raise SearchError('SerpApi search did not complete successfully')
+                        if isinstance(metadata, dict) and metadata.get('status') in {
+                            'Error',
+                            'Processing',
+                        }:
+                            raise SearchError(
+                                'SerpApi search did not complete successfully'
+                            )
                         if not isinstance(payload.get('organic_results', []), list):
-                            raise SearchError('SerpApi returned invalid organic results')
+                            raise SearchError(
+                                'SerpApi returned invalid organic results'
+                            )
                         safe = _safe_payload(payload, key)
                         await asyncio.to_thread(store.put, identifier, safe)
                         return safe, 'live'
@@ -225,12 +267,20 @@ async def search_batch(
                         if attempt == 0:
                             await asyncio.sleep(0.4)
                             continue
-                        raise SearchError('SerpApi connection failed after one retry') from None
+                        raise SearchError(
+                            'SerpApi connection failed after one retry'
+                        ) from None
                     except ValueError:
                         raise SearchError('SerpApi returned invalid JSON') from None
 
-    outcomes = await asyncio.gather(*(one(spec) for spec in specs), return_exceptions=True)
-    good = [(spec, outcome) for spec, outcome in zip(specs, outcomes) if isinstance(outcome, tuple)]
+    outcomes = await asyncio.gather(
+        *(one(spec) for spec in specs), return_exceptions=True
+    )
+    good = [
+        (spec, outcome)
+        for spec, outcome in zip(specs, outcomes)
+        if isinstance(outcome, tuple)
+    ]
     warnings = []
     for spec, outcome in zip(specs, outcomes):
         if isinstance(outcome, SearchError):
@@ -247,7 +297,11 @@ async def search_batch(
     if not good:
         errors = [item for item in outcomes if isinstance(item, SearchError)]
         status = errors[0].status_code if errors else 502
-        raise SearchError('; '.join(warnings) or 'No search queries were planned', receipt=receipt, status_code=status)
+        raise SearchError(
+            '; '.join(warnings) or 'No search queries were planned',
+            receipt=receipt,
+            status_code=status,
+        )
     hits = normalize(
         [outcome[0] for _, outcome in good],
         [spec.query for spec, _ in good],
@@ -263,5 +317,7 @@ async def search_live(
     queries: list[str], key: str, client: httpx.AsyncClient
 ) -> tuple[list[SearchHit], list[str]]:
     """Legacy Google-only adapter; new callers should consume search_batch receipts."""
-    result = await search_batch([QuerySpec('google', query) for query in queries], key, client)
+    result = await search_batch(
+        [QuerySpec('google', query) for query in queries], key, client
+    )
     return result.hits, result.warnings

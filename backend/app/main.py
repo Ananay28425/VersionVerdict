@@ -13,8 +13,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
 from .applicability import RULESET_VERSION, classify_all, rank
-from .evidence import FIXTURE_ROOT, allowed, public_allowed, collect
-from .generic_applicability import GENERIC_RULESET_VERSION, classify_generic, rank_generic
+from .evidence import FIXTURE_ROOT, allowed, collect, public_allowed
+from .generic_applicability import (
+    GENERIC_RULESET_VERSION,
+    classify_generic,
+    rank_generic,
+)
 from .models import ProfileResult, SearchReceipt, SearchResponse
 from .planner import plan
 from .profiler import MAX_FILE_BYTES, SUPPORTED_FILES, parse_profile
@@ -137,13 +141,20 @@ async def search(
     if mode not in {'live', 'recorded'}:
         raise HTTPException(422, 'Mode must be live or recorded.')
     library = ' '.join(library.split()).strip()
-    if not 1 <= len(library) <= 80 or any(ord(char) < 32 or ord(char) == 127 for char in library):
-        raise HTTPException(422, 'Technology must contain 1 to 80 printable characters.')
+    if not 1 <= len(library) <= 80 or any(
+        ord(char) < 32 or ord(char) == 127 for char in library
+    ):
+        raise HTTPException(
+            422, 'Technology must contain 1 to 80 printable characters.'
+        )
     if library.casefold() in {'pydantic', 'sqlalchemy'}:
         library = library.casefold()
     reviewed = library in {'pydantic', 'sqlalchemy'}
     if mode == 'recorded' and not reviewed:
-        raise HTTPException(422, 'Illustrative fixtures are only available for Pydantic and SQLAlchemy. Other targets use live search.')
+        raise HTTPException(
+            422,
+            'Illustrative fixtures are only available for Pydantic and SQLAlchemy. Other targets use live search.',
+        )
     try:
         left = parse_profile(
             left_name,
@@ -165,7 +176,9 @@ async def search(
             )
         elif right_extra_file is not None:
             raise ValueError('Version B needs its primary dependency file.')
-        query_plan = plan(query, library, include_secondary=include_secondary, profiles=profiles)
+        query_plan = plan(
+            query, library, include_secondary=include_secondary, profiles=profiles
+        )
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
 
@@ -189,12 +202,17 @@ async def search(
             except SearchError as exc:
                 return JSONResponse(
                     status_code=getattr(exc, 'status_code', 502),
-                    content={'detail': str(exc), 'receipt': getattr(exc, 'receipt', {})},
+                    content={
+                        'detail': str(exc),
+                        'receipt': getattr(exc, 'receipt', {}),
+                    },
                 )
             hits, warnings = batch.hits, batch.warnings
             receipt = SearchReceipt(**batch.receipt)
             response_mode = (
-                'cached' if receipt.api_calls == 0 else 'mixed' if receipt.cache_hits else 'live'
+                'cached'
+                if receipt.api_calls == 0
+                else 'mixed' if receipt.cache_hits else 'live'
             )
         else:
             expected = {
@@ -235,12 +253,25 @@ async def search(
     results = [
         ProfileResult(
             profile=profile,
-            cards=(rank if reviewed else lambda values: rank_generic(values, library, query))([
-                card
-                for hit in hits
-                for card in (classify_all(hit, texts.get(hit.id), profile, library, facts)
-                             if reviewed else [classify_generic(hit, texts.get(hit.id), profile, library, query)])
-            ]),
+            cards=(
+                rank
+                if reviewed
+                else lambda values: rank_generic(values, library, query)
+            )(
+                [
+                    card
+                    for hit in hits
+                    for card in (
+                        classify_all(hit, texts.get(hit.id), profile, library, facts)
+                        if reviewed
+                        else [
+                            classify_generic(
+                                hit, texts.get(hit.id), profile, library, query
+                            )
+                        ]
+                    )
+                ]
+            ),
         )
         for profile in profiles
     ]
@@ -265,11 +296,22 @@ def frontend(path: str):
         raise HTTPException(404, 'Unknown API endpoint.')
     dist = ROOT / 'frontend' / 'dist'
     requested = (dist / path).resolve()
-    if dist.exists() and requested.is_relative_to(dist.resolve()) and requested.is_file():
-        headers = {'Cache-Control': 'no-cache'} if requested.name == 'index.html' else {}
+    if (
+        dist.exists()
+        and requested.is_relative_to(dist.resolve())
+        and requested.is_file()
+    ):
+        headers = (
+            {'Cache-Control': 'no-cache'} if requested.name == 'index.html' else {}
+        )
         return FileResponse(requested, headers=headers)
     if path.startswith('assets/') or path.rsplit('/', 1)[-1].count('.'):
-        raise HTTPException(404, 'Frontend asset not found. Rebuild the frontend and reload.')
+        raise HTTPException(
+            404, 'Frontend asset not found. Rebuild the frontend and reload.'
+        )
     if (dist / 'index.html').exists():
         return FileResponse(dist / 'index.html', headers={'Cache-Control': 'no-cache'})
-    raise HTTPException(404, 'Frontend is not built. Run npm --prefix frontend run build from the repository root.')
+    raise HTTPException(
+        404,
+        'Frontend is not built. Run npm --prefix frontend run build from the repository root.',
+    )

@@ -4,7 +4,6 @@ import os
 
 import httpx
 import pytest
-
 from app.planner import QuerySpec
 from app.retrieval import search_batch
 
