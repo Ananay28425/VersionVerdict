@@ -8,20 +8,7 @@ VersionVerdict searches technical sources against a declared software or hardwar
 
 **One question. Different dependency versions. Different verdicts.**
 
-[Source code](https://github.com/Ananay28425/VersionVerdict) · [Demo guide](docs/demo.md) · [Deployment](docs/deployment.md) · [Evaluation](docs/evaluation.md)
-
 Demo video and public deployment URLs are not yet published.
-
-[Desktop screenshot](docs/screenshots/desktop.png) · [Mobile screenshot](docs/screenshots/mobile.png) · [Version comparison](docs/screenshots/comparison.png)
-
-Themes: [Pop art](docs/screenshots/theme-pop.png) · [Vibrant](docs/screenshots/theme-vibrant.png) · [Industrial](docs/screenshots/theme-industrial.png) · [Retro](docs/screenshots/theme-retro.png)
-
-<details>
-<summary>View the terminal workspace</summary>
-
-![VersionVerdict terminal workspace](docs/screenshots/desktop.png)
-
-</details>
 
 ## The problem
 
