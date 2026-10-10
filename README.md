@@ -140,6 +140,25 @@ npm --prefix frontend ci
 
 The launcher builds the frontend and serves both the interface and API on **port 3000**, bound to `0.0.0.0` so a development host can forward the port. It makes no search requests at startup. Open <http://127.0.0.1:3000>. API documentation: <http://127.0.0.1:3000/docs>. Set `PORT` to change the combined service port.
 
+### Windows PowerShell (including Zed's terminal)
+
+Run these commands from the repository root. `py -3.12` requires Python 3.12 to be installed; check available versions with `py -0p`. The virtual environment's Python is called directly, so activation is unnecessary.
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r backend\requirements-lock.txt
+npm --prefix frontend ci
+npm --prefix frontend run dev
+```
+
+Leave Vite running. In a second PowerShell terminal, also at the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --reload --port 3000
+```
+
+Open <http://127.0.0.1:5173>. Vite forwards `/api` to port 3000. If you previously started Uvicorn on port 8000, stop that process with `Ctrl+C` before starting this command. A root `.env` file is loaded by the backend on startup; restart Uvicorn after editing it. Keep `.env` out of Git and revoke any key pasted into a chat or public log.
+
 The cloud environment onboarding screen does not provide an embedded web preview. A running process there does not create a public deployment URL. Use a host's port-forwarding facility or the [deployment guide](docs/deployment.md); the committed screenshots show the tested interface.
 
 If the interface cannot load its JavaScript, the page displays startup instructions. If the backend is unavailable, the rendered workspace shows an API error and a retry action. Missing assets return 404 instead of an HTML response, and the entry page is revalidated after builds.
@@ -154,7 +173,7 @@ Vite proxies `/api` to port 3000. Press `/` outside a form field to focus the qu
 
 ### Configure live mode
 
-The application reads process environment variables; it does not automatically load `.env`. For this cloud workspace, add your key to the existing `SERPAPI_KEY` secret in the environment settings. For local Bash, enter the key privately before starting the backend:
+The backend reads process environment variables and loads a root `.env` file if present. Existing process variables take precedence. For this cloud workspace, add your key to the existing `SERPAPI_KEY` secret in the environment settings. For local Bash, you can enter the key privately before starting the backend:
 
 ```bash
 read -rsp 'SerpApi key: ' SERPAPI_KEY

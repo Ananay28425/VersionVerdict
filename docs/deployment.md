@@ -24,7 +24,7 @@ docker run --rm -p 8000:8000 \
   versionverdict
 ```
 
-Unlike the application itself, Docker's `--env-file` option loads the named file. The repository's `.env.example` is a template; copy it to `.env` and populate its backend key privately before using the command.
+Docker's `--env-file` passes the named file into the container as process variables. The repository's `.env.example` is a template; copy it to `.env` and populate its backend key privately before using the command. The backend also loads a root `.env` file for local runs, with process variables taking precedence.
 
 The image runs one Uvicorn worker and supports the platform's `PORT` variable. The default cache directory is `.cache/versionverdict` under the repository root; the volume above matches the image's `/app` layout.
 

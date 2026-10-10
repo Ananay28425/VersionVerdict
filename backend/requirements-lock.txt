@@ -19,6 +19,7 @@ Pygments==2.21.0
 pytest==9.1.1
 pytest-asyncio==1.4.0
 python-multipart==0.0.32
+python-dotenv==1.2.4
 soupsieve==2.10
 starlette==1.7.0
 typing-inspection==0.4.4

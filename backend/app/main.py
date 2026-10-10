@@ -7,6 +7,7 @@ import sqlite3
 from pathlib import Path
 
 import httpx
+from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -20,6 +21,7 @@ from .retrieval import SearchError, normalize, search_batch
 from .search_store import SearchStore
 
 ROOT = Path(__file__).resolve().parents[2]
+load_dotenv(ROOT / '.env', override=False)
 app = FastAPI(title='VersionVerdict', version='0.2.0')
 app.add_middleware(
     CORSMiddleware,
