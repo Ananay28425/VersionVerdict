@@ -1,4 +1,4 @@
-# VersionVerdict (Winner — Open Innovation Track, SerpApi India Hackathon 2026)
+# VersionVerdict (Winner - Open Innovation Track, SerpApi India Hackathon 2026)
 
 **The right answer for your version.**
 
