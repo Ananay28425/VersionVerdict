@@ -1,5 +1,7 @@
 # VersionVerdict
 
+# Winner — Open Innovation Track, SerpApi India Hackathon 2026
+
 **The right answer for your version.**
 
 *Repository-aware developer search powered by SerpApi.*
